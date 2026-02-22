@@ -7,7 +7,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="מאפה נאמן">
     
-    <title>הזמנות - מאפה נאמן</title>
+    <link rel="icon" href="https://img.icons8.com/fluency/96/croissant.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/180/croissant.png">
+    
+    <title>מאפה נאמן - ניהול הזמנות</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
@@ -29,7 +32,7 @@
 
 <div class="header">
     <div class="flex justify-between items-center">
-        <div><h1 class="text-2xl font-black italic">מאפה נאמן</h1><p id="date-display" class="text-slate-400 text-xs mt-1 font-bold"></p></div>
+        <div><h1 class="text-2xl font-black italic">🥐 מאפה נאמן</h1><p id="date-display" class="text-slate-400 text-xs mt-1 font-bold"></p></div>
         <div class="bg-white/10 p-3 px-5 rounded-2xl border border-white/10 text-center"><div id="stat-count" class="text-2xl font-black">0</div><div class="text-[10px] font-bold opacity-60">הזמנות</div></div>
     </div>
 </div>
@@ -115,7 +118,18 @@
         const start = new Date(o.deliveryDate + 'T' + (o.deliveryTime || "08:00"));
         const end = new Date(start.getTime() + 30*60000);
         const format = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
-        const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(end)}`,`SUMMARY:הזמנה: ${o.name}`,`DESCRIPTION:${o.details || ""}`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',`DESCRIPTION:תזכורת: הזמנה למחר - ${o.name}`,'END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY',`DESCRIPTION:תזכורת: הזמנה בעוד שעה - ${o.name}`,'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+        
+        // התזכורת עכשיו כוללת רק שם וכותרת נקיים
+        const ics = [
+            'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
+            `DTSTART:${format(start)}`,
+            `DTEND:${format(end)}`,
+            `SUMMARY:הזמנה: ${o.name} (מאפה נאמן)`,
+            'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',`DESCRIPTION:תזכורת: הזמנה למחר - ${o.name}`,'END:VALARM',
+            'BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY',`DESCRIPTION:תזכורת: הזמנה בעוד שעה - ${o.name}`,'END:VALARM',
+            'END:VEVENT','END:VCALENDAR'
+        ].join('\r\n');
+        
         const link = document.createElement('a'); link.href = window.URL.createObjectURL(new Blob([ics], {type: 'text/calendar'})); link.download = `תזכורת-${o.name}.ics`; link.click();
     }
 
