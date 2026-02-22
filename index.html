@@ -3,231 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="מאפה נאמן">
     
     <title>הזמנות - מאפה נאמן</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
-        
-        body { 
-            font-family: 'Assistant', sans-serif; 
-            background-color: #f1f5f9; 
-            margin: 0; 
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-            padding: calc(45px + env(safe-area-inset-top)) 20px 35px 20px;
-            border-radius: 0 0 40px 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .order-card {
-            background: white;
-            border-radius: 28px;
-            margin: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
-            border-right: 12px solid #cbd5e1;
-            transition: transform 0.1s;
-        }
-        
-        .order-card:active { transform: scale(0.98); }
-
+        body { font-family: 'Assistant', sans-serif; background-color: #f1f5f9; margin: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
+        .header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: calc(45px + env(safe-area-inset-top)) 20px 35px 20px; border-radius: 0 0 40px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .order-card { background: white; border-radius: 28px; margin: 16px; padding: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border-right: 12px solid #cbd5e1; transition: transform 0.1s; }
         .unpaid { border-right-color: #ef4444; }
         .paid { border-right-color: #22c55e; }
-
-        .tab-btn {
-            flex: 1;
-            padding: 18px;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-
-        .btn-wa {
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #25D366;
-            color: white;
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-        }
-
-        .btn-action {
-            width: 100%;
-            padding: 16px;
-            border-radius: 18px;
-            font-weight: 800;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-
-        .fab {
-            position: fixed;
-            bottom: 35px;
-            left: 25px;
-            width: 75px;
-            height: 75px;
-            background: #0f172a;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            z-index: 100;
-            border: none;
-        }
-
-        .modal-content {
-            background: white;
-            width: 92%;
-            max-width: 400px;
-            border-radius: 35px;
-            padding: 28px;
-        }
-
-        input, textarea { 
-            font-size: 17px !important; 
-            padding: 15px !important;
-            border-radius: 15px !important;
-            background: #f8fafc !important;
-            border: 1px solid #e2e8f0 !important;
-        }
-        
-        /* עיצוב לשדות תאריך ושעה כדי שיראו את הטקסט המלווה */
-        input[type="date"]::before { content: attr(placeholder); color: #94a3b8; margin-left: 10px; font-weight: 600; }
-        input[type="time"]::before { content: attr(placeholder); color: #94a3b8; margin-left: 10px; font-weight: 600; }
+        .btn-wa { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; background-color: #25D366; color: white; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
+        .btn-action { width: 100%; padding: 16px; border-radius: 18px; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .fab { position: fixed; bottom: 35px; left: 25px; width: 75px; height: 75px; background: #0f172a; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); z-index: 100; border: none; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 35px; padding: 28px; }
+        input, textarea { font-size: 17px !important; padding: 15px !important; border-radius: 15px !important; background: #f8fafc !important; border: 1px solid #e2e8f0 !important; width: 100%; outline: none; }
+        input[type="date"]::before, input[type="time"]::before { content: attr(placeholder); color: #94a3b8; margin-left: 10px; font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="header">
     <div class="flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-black tracking-tight italic">מאפה נאמן</h1>
-            <p class="text-slate-400 text-xs mt-1 font-bold" id="date-display"></p>
-        </div>
-        <div class="bg-white/10 p-3 px-5 rounded-2xl border border-white/10 text-center">
-            <div id="stat-count" class="text-2xl font-black leading-none">0</div>
-            <div class="text-[10px] uppercase font-bold opacity-60 mt-1">הזמנות</div>
-        </div>
+        <div><h1 class="text-2xl font-black italic">מאפה נאמן</h1><p id="date-display" class="text-slate-400 text-xs mt-1 font-bold"></p></div>
+        <div class="bg-white/10 p-3 px-5 rounded-2xl border border-white/10 text-center"><div id="stat-count" class="text-2xl font-black">0</div><div class="text-[10px] font-bold opacity-60">הזמנות</div></div>
     </div>
 </div>
 
 <div class="flex gap-4 p-5">
-    <button onclick="changeTab('pending')" id="tab-p" class="tab-btn bg-slate-900 text-white shadow-xl">בתהליך</button>
-    <button onclick="changeTab('done')" id="tab-d" class="tab-btn bg-white text-slate-400 border border-slate-100">בוצעו</button>
+    <button onclick="changeTab('pending')" id="tab-p" class="flex-1 p-4 rounded-2xl font-black bg-slate-900 text-white shadow-xl">בתהליך</button>
+    <button onclick="changeTab('done')" id="tab-d" class="flex-1 p-4 rounded-2xl font-black bg-white text-slate-400 border border-slate-100">בוצעו</button>
 </div>
 
 <div id="orders-list" class="pb-40"></div>
-
 <button class="fab" onclick="showAddModal()">+</button>
 
-<div id="modal" class="modal-overlay fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden items-center justify-center z-[200]" onclick="if(event.target==this)closeModal()">
+<div id="modal" class="modal-overlay" onclick="if(event.target==this)closeModal()">
     <div class="modal-content">
-        <h2 id="modal-title" class="text-2xl font-black text-slate-800 mb-6 text-center">פרטי הזמנה</h2>
+        <h2 id="modal-title" class="text-2xl font-black text-center mb-6">פרטי הזמנה</h2>
         <input type="hidden" id="edit-id">
         <div class="space-y-4">
-            <input type="text" id="in-name" placeholder="שם הלקוח" class="w-full outline-none">
-            <input type="tel" id="in-phone" placeholder="מספר טלפון" class="w-full outline-none">
-            <div class="flex gap-3">
-                <input type="date" id="in-date" placeholder="תאריך:" class="flex-1 outline-none">
-                <input type="time" id="in-time" placeholder="שעה:" class="w-32 outline-none">
-            </div>
-            <textarea id="in-desc" rows="3" placeholder="מה להכין?" class="w-full outline-none resize-none"></textarea>
-            <div class="flex gap-3 pt-4">
-                <button onclick="closeModal()" class="flex-1 p-4 bg-slate-100 text-slate-600 rounded-2xl font-black">ביטול</button>
-                <button onclick="saveOrder()" class="flex-[2] p-4 bg-slate-900 text-white rounded-2xl font-black shadow-lg">שמור הזמנה</button>
-            </div>
+            <input type="text" id="in-name" placeholder="שם הלקוח">
+            <input type="tel" id="in-phone" placeholder="מספר טלפון">
+            <div class="flex gap-3"><input type="date" id="in-date" placeholder="תאריך:" class="flex-1"><input type="time" id="in-time" placeholder="שעה:" class="w-32"></div>
+            <textarea id="in-desc" rows="3" placeholder="מה להכין?"></textarea>
+            <div class="flex gap-3 pt-4"><button onclick="closeModal()" class="flex-1 p-4 bg-slate-100 text-slate-600 rounded-2xl font-black">ביטול</button><button onclick="saveOrder()" class="flex-[2] p-4 bg-slate-900 text-white rounded-2xl font-black shadow-lg">שמור</button></div>
         </div>
     </div>
 </div>
 
+<div id="delete-modal" class="modal-overlay" onclick="closeDeleteModal()">
+    <div class="modal-content text-center">
+        <div class="text-4xl mb-4">⚠️</div>
+        <h2 class="text-xl font-black mb-2">למחוק את ההזמנה?</h2>
+        <p class="text-slate-500 mb-6">לא ניתן יהיה לשחזר את המידע</p>
+        <div class="flex gap-3"><button onclick="closeDeleteModal()" class="flex-1 p-4 bg-slate-100 text-slate-600 rounded-2xl font-black">ביטול</button><button id="confirm-delete-btn" class="flex-1 p-4 bg-red-500 text-white rounded-2xl font-black shadow-lg">מחק</button></div>
+    </div>
+</div>
+
 <script>
-    let orders = JSON.parse(localStorage.getItem('naeman_orders_v3') || '[]');
+    let orders = JSON.parse(localStorage.getItem('naeman_orders_v4') || '[]');
     let currentTab = 'pending';
+    let deleteIdx = null;
 
     function init() {
-        const options = { weekday: 'long', day: 'numeric', month: 'long' };
-        document.getElementById('date-display').innerText = new Date().toLocaleDateString('he-IL', options);
+        document.getElementById('date-display').innerText = new Date().toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' });
         render();
-    }
-
-    function getDayName(dateStr) {
-        if(!dateStr) return "";
-        const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-        return 'יום ' + days[new Date(dateStr).getDay()];
     }
 
     function render() {
         const list = document.getElementById('orders-list');
-        const filtered = orders
-            .filter(o => currentTab === 'done' ? o.completed : !o.completed)
+        const filtered = orders.filter(o => currentTab === 'done' ? o.completed : !o.completed)
             .sort((a, b) => (a.deliveryDate + a.deliveryTime).localeCompare(b.deliveryDate + b.deliveryTime));
-        
         document.getElementById('stat-count').innerText = filtered.length;
 
         list.innerHTML = filtered.map((o) => {
             const idx = orders.indexOf(o);
-            const waLink = `https://wa.me/972${o.phone?.replace(/^0/, '')}?text=${encodeURIComponent('היי ' + o.name + ', ההזמנה שלך ממאפה נאמן מוכנה!')}`;
-            const dayName = getDayName(o.deliveryDate);
-            
+            const waLink = `https://wa.me/972${o.phone?.replace(/^0/, '')}?text=${encodeURIComponent('היי ' + o.name + ', בקשר להזמנה שלך ממאפה נאמן')}`;
+            const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+            const dayName = o.deliveryDate ? 'יום ' + days[new Date(o.deliveryDate).getDay()] : "";
+
             return `
                 <div class="order-card ${o.paid ? 'paid' : 'unpaid'}">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="bg-slate-100 text-slate-600 px-4 py-1.5 rounded-full text-[13px] font-black">
-                            ${dayName} | ${o.deliveryDate ? o.deliveryDate.split('-').reverse().slice(0,2).join('/') : '--/--'} | ${o.deliveryTime || '--:--'}
-                        </div>
-                        <div class="flex gap-4">
-                            <button onclick="editOrder(${idx})" class="text-slate-400 text-xl p-2">✎</button>
-                            <button onclick="deleteOrder(${idx})" class="text-slate-400 text-xl p-2">✕</button>
-                        </div>
+                        <div class="bg-slate-100 text-slate-600 px-4 py-1.5 rounded-full text-[13px] font-black">${dayName} | ${o.deliveryDate?.split('-').reverse().slice(0,2).join('/') || '--/--'} | ${o.deliveryTime || '--:--'}</div>
+                        <div class="flex gap-4"><button onclick="editOrder(${idx})" class="text-slate-400 text-xl p-2">✎</button><button onclick="openDeleteModal(${idx})" class="text-slate-400 text-xl p-2">✕</button></div>
                     </div>
-                    
                     <div class="flex justify-between items-center mb-5">
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-800 leading-tight">${o.name}</h3>
-                            <a href="tel:${o.phone}" class="text-blue-500 font-bold text-sm">📞 ${o.phone}</a>
-                        </div>
-                        <a href="${waLink}" target="_blank" class="btn-wa">
-                            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.659 1.437 5.634 1.437h.005c6.558 0 11.894-5.335 11.897-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                        </a>
+                        <div class="flex-1"><h3 class="text-2xl font-black text-slate-800">${o.name}</h3><a href="tel:${o.phone}" class="text-blue-500 font-bold text-sm">📞 ${o.phone}</a></div>
+                        <a href="${waLink}" target="_blank" class="btn-wa"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.659 1.437 5.634 1.437h.005c6.558 0 11.894-5.335 11.897-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
                     </div>
-
                     <div class="p-5 bg-slate-50 rounded-2xl text-slate-700 font-semibold mb-5 text-base border border-slate-100 whitespace-pre-wrap">${o.details}</div>
-                    
                     <div class="space-y-3">
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="togglePay(${idx})" class="btn-action border-2 ${o.paid ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'}">
-                                ${o.paid ? 'שולם ✓' : 'לא שולם'}
-                            </button>
-                            <button onclick="addToCalendar(${idx})" class="btn-action bg-blue-50 text-blue-600 border-2 border-blue-200">
-                                🔔 יומן
-                            </button>
+                            <button onclick="togglePay(${idx})" class="btn-action border-2 ${o.paid ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'}">${o.paid ? 'שולם ✓' : 'לא שולם'}</button>
+                            <button onclick="addToCalendar(${idx})" class="btn-action bg-blue-50 text-blue-600 border-2 border-blue-200">🔔 תזכורת</button>
                         </div>
-                        <button onclick="toggleComplete(${idx})" class="btn-action bg-slate-900 text-white shadow-md active:bg-slate-700">
-                            ${o.completed ? '↩ החזר לרשימה' : 'סמן כבוצע ✅'}
-                        </button>
+                        <button onclick="toggleComplete(${idx})" class="btn-action bg-slate-900 text-white shadow-md active:bg-slate-700 font-black">${o.completed ? '↩ החזר לרשימה' : 'סמן כבוצע ✅'}</button>
                     </div>
                 </div>`;
         }).join('');
@@ -235,94 +111,32 @@
 
     function addToCalendar(idx) {
         const o = orders[idx];
-        if(!o.deliveryDate) return alert("אנא הזן תאריך להזמנה");
-        
-        const dateParts = o.deliveryDate.split('-');
-        const timeParts = (o.deliveryTime || "08:00").split(':');
-        
-        const start = new Date(dateParts[0], dateParts[1]-1, dateParts[2], timeParts[0], timeParts[1]);
-        const end = new Date(start.getTime() + 30*60000); 
-        
+        if(!o.deliveryDate) return;
+        const start = new Date(o.deliveryDate + 'T' + (o.deliveryTime || "08:00"));
+        const end = new Date(start.getTime() + 30*60000);
         const format = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
-        const details = (o.details || "").replace(/\n/g, "\\n");
-
-        const ics = [
-            'BEGIN:VCALENDAR',
-            'VERSION:2.0',
-            'BEGIN:VEVENT',
-            `DTSTART:${format(start)}`,
-            `DTEND:${format(end)}`,
-            `SUMMARY:הזמנה: ${o.name}`,
-            `DESCRIPTION:${details}`,
-            'BEGIN:VALARM',
-            'TRIGGER:-P1D', // יום לפני
-            'ACTION:DISPLAY',
-            `DESCRIPTION:תזכורת: הזמנה למחר - ${o.name}`,
-            'END:VALARM',
-            'BEGIN:VALARM',
-            'TRIGGER:-PT1H', // שעה לפני
-            'ACTION:DISPLAY',
-            `DESCRIPTION:תזכורת: הזמנה בעוד שעה - ${o.name}`,
-            'END:VALARM',
-            'END:VEVENT',
-            'END:VCALENDAR'
-        ].join('\r\n');
-
-        const blob = new Blob([ics], {type: 'text/calendar'});
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = `order-${o.name}.ics`;
-        link.click();
-    }
-
-    function changeTab(t) {
-        currentTab = t;
-        document.getElementById('tab-p').className = t === 'pending' ? 'tab-btn bg-slate-900 text-white shadow-xl' : 'tab-btn bg-white text-slate-400 border border-slate-100';
-        document.getElementById('tab-d').className = t === 'done' ? 'tab-btn bg-slate-900 text-white shadow-xl' : 'tab-btn bg-white text-slate-400 border border-slate-100';
-        render();
+        const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(end)}`,`SUMMARY:הזמנה: ${o.name}`,`DESCRIPTION:${o.details || ""}`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',`DESCRIPTION:תזכורת: הזמנה למחר - ${o.name}`,'END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY',`DESCRIPTION:תזכורת: הזמנה בעוד שעה - ${o.name}`,'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+        const link = document.createElement('a'); link.href = window.URL.createObjectURL(new Blob([ics], {type: 'text/calendar'})); link.download = `תזכורת-${o.name}.ics`; link.click();
     }
 
     function saveOrder() {
         const id = document.getElementById('edit-id').value;
-        const name = document.getElementById('in-name').value;
-        if(!name) return;
-        const data = {
-            name: name,
-            phone: document.getElementById('in-phone').value,
-            details: document.getElementById('in-desc').value,
-            deliveryDate: document.getElementById('in-date').value,
-            deliveryTime: document.getElementById('in-time').value,
-            paid: id !== "" ? orders[id].paid : false,
-            completed: id !== "" ? orders[id].completed : false
-        };
+        const data = { name: document.getElementById('in-name').value, phone: document.getElementById('in-phone').value, details: document.getElementById('in-desc').value, deliveryDate: document.getElementById('in-date').value, deliveryTime: document.getElementById('in-time').value, paid: id !== "" ? orders[id].paid : false, completed: id !== "" ? orders[id].completed : false };
+        if(!data.name) return;
         if(id !== "") orders[id] = data; else orders.push(data);
-        localStorage.setItem('naeman_orders_v3', JSON.stringify(orders));
-        closeModal();
-        render();
+        localStorage.setItem('naeman_orders_v4', JSON.stringify(orders));
+        closeModal(); render();
     }
 
-    function editOrder(idx) {
-        const o = orders[idx];
-        document.getElementById('edit-id').value = idx;
-        document.getElementById('in-name').value = o.name;
-        document.getElementById('in-phone').value = o.phone;
-        document.getElementById('in-desc').value = o.details;
-        document.getElementById('in-date').value = o.deliveryDate;
-        document.getElementById('in-time').value = o.deliveryTime;
-        document.getElementById('modal').style.display = 'flex';
-    }
-
-    function showAddModal() {
-        document.getElementById('edit-id').value = "";
-        ['in-name', 'in-phone', 'in-desc', 'in-date', 'in-time'].forEach(id => document.getElementById(id).value = "");
-        document.getElementById('modal').style.display = 'flex';
-    }
-
+    function changeTab(t) { currentTab = t; document.getElementById('tab-p').className = t === 'pending' ? 'flex-1 p-4 rounded-2xl font-black bg-slate-900 text-white shadow-xl' : 'flex-1 p-4 rounded-2xl font-black bg-white text-slate-400 border border-slate-100'; document.getElementById('tab-d').className = t === 'done' ? 'flex-1 p-4 rounded-2xl font-black bg-slate-900 text-white shadow-xl' : 'flex-1 p-4 rounded-2xl font-black bg-white text-slate-400 border border-slate-100'; render(); }
+    function showAddModal() { document.getElementById('edit-id').value = ""; ['in-name', 'in-phone', 'in-desc', 'in-date', 'in-time'].forEach(id => document.getElementById(id).value = ""); document.getElementById('modal').style.display = 'flex'; }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
-    function togglePay(i) { orders[i].paid = !orders[i].paid; saveAll(); }
-    function toggleComplete(i) { orders[i].completed = !orders[i].completed; saveAll(); }
-    function deleteOrder(i) { if(confirm('למחוק את ההזמנה?')) { orders.splice(i,1); saveAll(); } }
-    function saveAll() { localStorage.setItem('naeman_orders_v3', JSON.stringify(orders)); render(); }
+    function editOrder(idx) { const o = orders[idx]; document.getElementById('edit-id').value = idx; document.getElementById('in-name').value = o.name; document.getElementById('in-phone').value = o.phone; document.getElementById('in-desc').value = o.details; document.getElementById('in-date').value = o.deliveryDate; document.getElementById('in-time').value = o.deliveryTime; document.getElementById('modal').style.display = 'flex'; }
+    function openDeleteModal(idx) { deleteIdx = idx; document.getElementById('delete-modal').style.display = 'flex'; }
+    function closeDeleteModal() { document.getElementById('delete-modal').style.display = 'none'; }
+    document.getElementById('confirm-delete-btn').onclick = () => { orders.splice(deleteIdx, 1); localStorage.setItem('naeman_orders_v4', JSON.stringify(orders)); closeDeleteModal(); render(); };
+    function togglePay(i) { orders[i].paid = !orders[i].paid; localStorage.setItem('naeman_orders_v4', JSON.stringify(orders)); render(); }
+    function toggleComplete(i) { orders[i].completed = !orders[i].completed; localStorage.setItem('naeman_orders_v4', JSON.stringify(orders)); render(); }
 
     init();
 </script>
