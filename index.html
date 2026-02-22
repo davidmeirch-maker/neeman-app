@@ -46,7 +46,6 @@
         .unpaid { border-right-color: #ef4444; }
         .paid { border-right-color: #22c55e; }
 
-        /* כפתורי הטאבים המוגדלים */
         .tab-btn {
             flex: 1;
             padding: 18px;
@@ -56,7 +55,6 @@
             transition: all 0.2s;
         }
 
-        /* עיצוב כפתור וואטסאפ המקורי */
         .btn-wa {
             width: 50px;
             height: 50px;
@@ -69,7 +67,6 @@
             box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
         }
 
-        /* כפתור בוצע ענקי */
         .btn-action {
             width: 100%;
             padding: 16px;
@@ -116,6 +113,10 @@
             background: #f8fafc !important;
             border: 1px solid #e2e8f0 !important;
         }
+        
+        /* עיצוב לשדות תאריך ושעה כדי שיראו את הטקסט המלווה */
+        input[type="date"]::before { content: attr(placeholder); color: #94a3b8; margin-left: 10px; font-weight: 600; }
+        input[type="time"]::before { content: attr(placeholder); color: #94a3b8; margin-left: 10px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -143,20 +144,20 @@
 <button class="fab" onclick="showAddModal()">+</button>
 
 <div id="modal" class="modal-overlay fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden items-center justify-center z-[200]" onclick="if(event.target==this)closeModal()">
-    <div class="modal-content animate-in zoom-in-95 duration-200">
+    <div class="modal-content">
         <h2 id="modal-title" class="text-2xl font-black text-slate-800 mb-6 text-center">פרטי הזמנה</h2>
         <input type="hidden" id="edit-id">
         <div class="space-y-4">
             <input type="text" id="in-name" placeholder="שם הלקוח" class="w-full outline-none">
             <input type="tel" id="in-phone" placeholder="מספר טלפון" class="w-full outline-none">
             <div class="flex gap-3">
-                <input type="date" id="in-date" class="flex-1 outline-none">
-                <input type="time" id="in-time" class="w-32 outline-none">
+                <input type="date" id="in-date" placeholder="תאריך:" class="flex-1 outline-none">
+                <input type="time" id="in-time" placeholder="שעה:" class="w-32 outline-none">
             </div>
             <textarea id="in-desc" rows="3" placeholder="מה להכין?" class="w-full outline-none resize-none"></textarea>
             <div class="flex gap-3 pt-4">
                 <button onclick="closeModal()" class="flex-1 p-4 bg-slate-100 text-slate-600 rounded-2xl font-black">ביטול</button>
-                <button onclick="saveOrder()" class="flex-[2] p-4 bg-slate-900 text-white rounded-2xl font-black shadow-lg active:bg-slate-800">שמור הזמנה</button>
+                <button onclick="saveOrder()" class="flex-[2] p-4 bg-slate-900 text-white rounded-2xl font-black shadow-lg">שמור הזמנה</button>
             </div>
         </div>
     </div>
@@ -172,6 +173,12 @@
         render();
     }
 
+    function getDayName(dateStr) {
+        if(!dateStr) return "";
+        const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+        return 'יום ' + days[new Date(dateStr).getDay()];
+    }
+
     function render() {
         const list = document.getElementById('orders-list');
         const filtered = orders
@@ -183,12 +190,13 @@
         list.innerHTML = filtered.map((o) => {
             const idx = orders.indexOf(o);
             const waLink = `https://wa.me/972${o.phone?.replace(/^0/, '')}?text=${encodeURIComponent('היי ' + o.name + ', ההזמנה שלך ממאפה נאמן מוכנה!')}`;
+            const dayName = getDayName(o.deliveryDate);
             
             return `
                 <div class="order-card ${o.paid ? 'paid' : 'unpaid'}">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="bg-slate-100 text-slate-600 px-4 py-1.5 rounded-full text-xs font-black">
-                            ${o.deliveryDate ? o.deliveryDate.split('-').reverse().slice(0,2).join('/') : '--/--'} | ${o.deliveryTime || '--:--'}
+                        <div class="bg-slate-100 text-slate-600 px-4 py-1.5 rounded-full text-[13px] font-black">
+                            ${dayName} | ${o.deliveryDate ? o.deliveryDate.split('-').reverse().slice(0,2).join('/') : '--/--'} | ${o.deliveryTime || '--:--'}
                         </div>
                         <div class="flex gap-4">
                             <button onclick="editOrder(${idx})" class="text-slate-400 text-xl p-2">✎</button>
@@ -209,15 +217,62 @@
                     <div class="p-5 bg-slate-50 rounded-2xl text-slate-700 font-semibold mb-5 text-base border border-slate-100 whitespace-pre-wrap">${o.details}</div>
                     
                     <div class="space-y-3">
-                        <button onclick="togglePay(${idx})" class="btn-action border-2 ${o.paid ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'}">
-                            ${o.paid ? 'שולם במלואו ✓' : 'עדיין לא שולם ✖'}
-                        </button>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="togglePay(${idx})" class="btn-action border-2 ${o.paid ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'}">
+                                ${o.paid ? 'שולם ✓' : 'לא שולם'}
+                            </button>
+                            <button onclick="addToCalendar(${idx})" class="btn-action bg-blue-50 text-blue-600 border-2 border-blue-200">
+                                🔔 יומן
+                            </button>
+                        </div>
                         <button onclick="toggleComplete(${idx})" class="btn-action bg-slate-900 text-white shadow-md active:bg-slate-700">
-                            ${o.completed ? '↩ החזר לרשימה' : 'סמן כבוצע - סיים הזמנה ✅'}
+                            ${o.completed ? '↩ החזר לרשימה' : 'סמן כבוצע ✅'}
                         </button>
                     </div>
                 </div>`;
         }).join('');
+    }
+
+    function addToCalendar(idx) {
+        const o = orders[idx];
+        if(!o.deliveryDate) return alert("אנא הזן תאריך להזמנה");
+        
+        const dateParts = o.deliveryDate.split('-');
+        const timeParts = (o.deliveryTime || "08:00").split(':');
+        
+        const start = new Date(dateParts[0], dateParts[1]-1, dateParts[2], timeParts[0], timeParts[1]);
+        const end = new Date(start.getTime() + 30*60000); 
+        
+        const format = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
+        const details = (o.details || "").replace(/\n/g, "\\n");
+
+        const ics = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'BEGIN:VEVENT',
+            `DTSTART:${format(start)}`,
+            `DTEND:${format(end)}`,
+            `SUMMARY:הזמנה: ${o.name}`,
+            `DESCRIPTION:${details}`,
+            'BEGIN:VALARM',
+            'TRIGGER:-P1D', // יום לפני
+            'ACTION:DISPLAY',
+            `DESCRIPTION:תזכורת: הזמנה למחר - ${o.name}`,
+            'END:VALARM',
+            'BEGIN:VALARM',
+            'TRIGGER:-PT1H', // שעה לפני
+            'ACTION:DISPLAY',
+            `DESCRIPTION:תזכורת: הזמנה בעוד שעה - ${o.name}`,
+            'END:VALARM',
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ].join('\r\n');
+
+        const blob = new Blob([ics], {type: 'text/calendar'});
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `order-${o.name}.ics`;
+        link.click();
     }
 
     function changeTab(t) {
