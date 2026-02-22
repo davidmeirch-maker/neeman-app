@@ -17,100 +17,105 @@
         
         body { 
             font-family: 'Assistant', sans-serif; 
-            background-color: #f8fafc; 
+            background-color: #f1f5f9; 
             margin: 0; 
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .header {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
-            padding: calc(20px + env(safe-area-inset-top)) 20px 30px 20px;
-            border-radius: 0 0 35px 35px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            padding: calc(45px + env(safe-area-inset-top)) 20px 35px 20px;
+            border-radius: 0 0 40px 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .order-card {
             background: white;
-            border-radius: 24px;
-            margin: 12px 16px;
-            padding: 18px;
-            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.08);
-            border-right: 10px solid #cbd5e1;
+            border-radius: 28px;
+            margin: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            border-right: 12px solid #cbd5e1;
+            transition: transform 0.1s;
         }
+        
+        .order-card:active { transform: scale(0.98); }
 
         .unpaid { border-right-color: #ef4444; }
         .paid { border-right-color: #22c55e; }
 
-        .date-badge {
-            background: #f1f5f9;
-            color: #475569;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+        /* כפתורי הטאבים המוגדלים */
+        .tab-btn {
+            flex: 1;
+            padding: 18px;
+            border-radius: 20px;
             font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+            font-size: 16px;
+            transition: all 0.2s;
         }
 
-        .urgent-text { color: #ef4444; font-weight: 900; }
-
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            left: 25px;
-            width: 65px;
-            height: 65px;
-            background: #0f172a;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            z-index: 50;
-            border: none;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(8px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 380px;
-            border-radius: 30px;
-            padding: 24px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
+        /* עיצוב כפתור וואטסאפ המקורי */
         .btn-wa {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: #25D366;
             color: white;
             box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-            text-decoration: none;
         }
-        
-        input, textarea { font-size: 16px !important; }
-        label { display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 2px; margin-right: 6px; }
+
+        /* כפתור בוצע ענקי */
+        .btn-action {
+            width: 100%;
+            padding: 16px;
+            border-radius: 18px;
+            font-weight: 800;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 35px;
+            left: 25px;
+            width: 75px;
+            height: 75px;
+            background: #0f172a;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            z-index: 100;
+            border: none;
+        }
+
+        .modal-content {
+            background: white;
+            width: 92%;
+            max-width: 400px;
+            border-radius: 35px;
+            padding: 28px;
+        }
+
+        input, textarea { 
+            font-size: 17px !important; 
+            padding: 15px !important;
+            border-radius: 15px !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+        }
     </style>
 </head>
 <body>
@@ -118,72 +123,53 @@
 <div class="header">
     <div class="flex justify-between items-center">
         <div>
-            <div class="flex items-center gap-2">
-                <span class="text-2xl">🥐</span>
-                <h1 class="text-xl font-black tracking-tight">מאפה נאמן</h1>
-            </div>
+            <h1 class="text-2xl font-black tracking-tight italic">מאפה נאמן</h1>
             <p class="text-slate-400 text-xs mt-1 font-bold" id="date-display"></p>
         </div>
-        <div class="bg-white/10 p-2 px-4 rounded-xl border border-white/10 text-center">
-            <div id="stat-count" class="text-xl font-black leading-none">0</div>
-            <div class="text-[9px] uppercase font-bold opacity-60 mt-1">הזמנות</div>
+        <div class="bg-white/10 p-3 px-5 rounded-2xl border border-white/10 text-center">
+            <div id="stat-count" class="text-2xl font-black leading-none">0</div>
+            <div class="text-[10px] uppercase font-bold opacity-60 mt-1">הזמנות</div>
         </div>
     </div>
 </div>
 
-<div class="flex gap-3 p-4">
-    <button onclick="changeTab('pending')" id="tab-p" class="flex-1 p-3 rounded-xl font-black bg-slate-900 text-white shadow-lg text-sm transition-all">בתהליך</button>
-    <button onclick="changeTab('done')" id="tab-d" class="flex-1 p-3 rounded-xl font-black bg-white text-slate-400 border border-slate-100 text-sm transition-all">בוצעו</button>
+<div class="flex gap-4 p-5">
+    <button onclick="changeTab('pending')" id="tab-p" class="tab-btn bg-slate-900 text-white shadow-xl">בתהליך</button>
+    <button onclick="changeTab('done')" id="tab-d" class="tab-btn bg-white text-slate-400 border border-slate-100">בוצעו</button>
 </div>
 
-<div id="orders-list" class="pb-32"></div>
+<div id="orders-list" class="pb-40"></div>
 
 <button class="fab" onclick="showAddModal()">+</button>
 
-<div id="modal" class="modal-overlay" onclick="if(event.target==this)closeModal()">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 id="modal-title" class="text-xl font-black text-slate-800 mb-5 text-center">פרטי הזמנה</h2>
+<div id="modal" class="modal-overlay fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden items-center justify-center z-[200]" onclick="if(event.target==this)closeModal()">
+    <div class="modal-content animate-in zoom-in-95 duration-200">
+        <h2 id="modal-title" class="text-2xl font-black text-slate-800 mb-6 text-center">פרטי הזמנה</h2>
         <input type="hidden" id="edit-id">
-        <div class="space-y-3">
-            <div><label>שם הלקוח</label><input type="text" id="in-name" class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none"></div>
-            <div><label>מספר טלפון</label><input type="tel" id="in-phone" class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none"></div>
+        <div class="space-y-4">
+            <input type="text" id="in-name" placeholder="שם הלקוח" class="w-full outline-none">
+            <input type="tel" id="in-phone" placeholder="מספר טלפון" class="w-full outline-none">
             <div class="flex gap-3">
-                <div class="flex-1"><label>תאריך</label><input type="date" id="in-date" class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none text-sm"></div>
-                <div class="w-28"><label>שעה</label><input type="time" id="in-time" class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none text-sm"></div>
+                <input type="date" id="in-date" class="flex-1 outline-none">
+                <input type="time" id="in-time" class="w-32 outline-none">
             </div>
-            <div><label>מה להכין?</label><textarea id="in-desc" rows="3" class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none resize-none text-sm"></textarea></div>
-            <div class="flex gap-3 pt-2">
-                <button onclick="closeModal()" class="flex-1 p-3 bg-slate-100 text-slate-600 rounded-xl font-black text-sm">ביטול</button>
-                <button onclick="saveOrder()" class="flex-[2] p-3 bg-slate-900 text-white rounded-xl font-black shadow-md text-sm">שמור הזמנה</button>
+            <textarea id="in-desc" rows="3" placeholder="מה להכין?" class="w-full outline-none resize-none"></textarea>
+            <div class="flex gap-3 pt-4">
+                <button onclick="closeModal()" class="flex-1 p-4 bg-slate-100 text-slate-600 rounded-2xl font-black">ביטול</button>
+                <button onclick="saveOrder()" class="flex-[2] p-4 bg-slate-900 text-white rounded-2xl font-black shadow-lg active:bg-slate-800">שמור הזמנה</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    let orders = JSON.parse(localStorage.getItem('naeman_orders_v2') || '[]');
+    let orders = JSON.parse(localStorage.getItem('naeman_orders_v3') || '[]');
     let currentTab = 'pending';
 
     function init() {
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
         document.getElementById('date-display').innerText = new Date().toLocaleDateString('he-IL', options);
         render();
-    }
-
-    function getUrgencyText(dateStr) {
-        if(!dateStr) return "";
-        const now = new Date(); now.setHours(0,0,0,0);
-        const delivery = new Date(dateStr); delivery.setHours(0,0,0,0);
-        const diff = (delivery - now) / (1000 * 60 * 60 * 24);
-        if (diff === 0) return "היום!";
-        if (diff === 1) return "מחר!";
-        return "";
-    }
-
-    function getDayOfWeek(dateStr) {
-        if(!dateStr) return "";
-        const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-        return 'יום ' + days[new Date(dateStr).getDay()];
     }
 
     function render() {
@@ -194,60 +180,68 @@
         
         document.getElementById('stat-count').innerText = filtered.length;
 
-        list.innerHTML = filtered.map((o, idx) => {
-            const urgency = getUrgencyText(o.deliveryDate);
-            const waLink = `https://wa.me/972${o.phone?.replace(/^0/, '')}?text=${encodeURIComponent('שלום ' + o.name + ', בקשר להזמנה שלך...')}`;
+        list.innerHTML = filtered.map((o) => {
+            const idx = orders.indexOf(o);
+            const waLink = `https://wa.me/972${o.phone?.replace(/^0/, '')}?text=${encodeURIComponent('היי ' + o.name + ', ההזמנה שלך ממאפה נאמן מוכנה!')}`;
             
             return `
                 <div class="order-card ${o.paid ? 'paid' : 'unpaid'}">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="date-badge">
-                            <span>${getDayOfWeek(o.deliveryDate)}</span>
-                            <span class="opacity-30">|</span>
-                            <span>${o.deliveryDate ? o.deliveryDate.split('-').reverse().slice(0,2).join('/') : '--/--'}</span>
-                            <span class="opacity-30">|</span>
-                            <span>${o.deliveryTime || '--:--'}</span>
-                            ${urgency ? `<span class="urgent-text mr-1">${urgency}</span>` : ''}
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="bg-slate-100 text-slate-600 px-4 py-1.5 rounded-full text-xs font-black">
+                            ${o.deliveryDate ? o.deliveryDate.split('-').reverse().slice(0,2).join('/') : '--/--'} | ${o.deliveryTime || '--:--'}
                         </div>
-                        <div class="flex gap-3">
-                            <button onclick="editOrder(${orders.indexOf(o)})" class="text-slate-300">✎</button>
-                            <button onclick="deleteOrder(${orders.indexOf(o)})" class="text-slate-300">✕</button>
+                        <div class="flex gap-4">
+                            <button onclick="editOrder(${idx})" class="text-slate-400 text-xl p-2">✎</button>
+                            <button onclick="deleteOrder(${idx})" class="text-slate-400 text-xl p-2">✕</button>
                         </div>
                     </div>
-                    <div class="flex justify-between items-center mb-3">
-                        <div class="flex-1 truncate">
-                            <h3 class="text-xl font-black text-slate-800">${o.name}</h3>
-                            <a href="tel:${o.phone}" class="text-blue-500 font-bold text-xs">📞 ${o.phone}</a>
+                    
+                    <div class="flex justify-between items-center mb-5">
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-800 leading-tight">${o.name}</h3>
+                            <a href="tel:${o.phone}" class="text-blue-500 font-bold text-sm">📞 ${o.phone}</a>
                         </div>
-                        <a href="${waLink}" target="_blank" class="btn-wa">📲</a>
+                        <a href="${waLink}" target="_blank" class="btn-wa">
+                            <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.659 1.437 5.634 1.437h.005c6.558 0 11.894-5.335 11.897-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </a>
                     </div>
-                    <div class="p-4 bg-slate-50 rounded-xl text-slate-700 font-semibold mb-4 text-sm whitespace-pre-wrap">${o.details}</div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="togglePay(${orders.indexOf(o)})" class="p-2.5 rounded-xl font-bold text-[11px] border ${o.paid ? 'bg-green-50 text-green-700 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}">
-                            ${o.paid ? 'שולם ✓' : 'לא שולם'}
+
+                    <div class="p-5 bg-slate-50 rounded-2xl text-slate-700 font-semibold mb-5 text-base border border-slate-100 whitespace-pre-wrap">${o.details}</div>
+                    
+                    <div class="space-y-3">
+                        <button onclick="togglePay(${idx})" class="btn-action border-2 ${o.paid ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'}">
+                            ${o.paid ? 'שולם במלואו ✓' : 'עדיין לא שולם ✖'}
                         </button>
-                        <button onclick="toggleComplete(${orders.indexOf(o)})" class="p-3 rounded-xl font-bold text-xs bg-slate-900 text-white shadow-sm">
-                            ${o.completed ? 'שחזר' : 'סמן כבוצע'}
+                        <button onclick="toggleComplete(${idx})" class="btn-action bg-slate-900 text-white shadow-md active:bg-slate-700">
+                            ${o.completed ? '↩ החזר לרשימה' : 'סמן כבוצע - סיים הזמנה ✅'}
                         </button>
                     </div>
                 </div>`;
         }).join('');
     }
 
+    function changeTab(t) {
+        currentTab = t;
+        document.getElementById('tab-p').className = t === 'pending' ? 'tab-btn bg-slate-900 text-white shadow-xl' : 'tab-btn bg-white text-slate-400 border border-slate-100';
+        document.getElementById('tab-d').className = t === 'done' ? 'tab-btn bg-slate-900 text-white shadow-xl' : 'tab-btn bg-white text-slate-400 border border-slate-100';
+        render();
+    }
+
     function saveOrder() {
         const id = document.getElementById('edit-id').value;
+        const name = document.getElementById('in-name').value;
+        if(!name) return;
         const data = {
-            name: document.getElementById('in-name').value,
+            name: name,
             phone: document.getElementById('in-phone').value,
             details: document.getElementById('in-desc').value,
             deliveryDate: document.getElementById('in-date').value,
             deliveryTime: document.getElementById('in-time').value,
-            paid: false,
-            completed: false
+            paid: id !== "" ? orders[id].paid : false,
+            completed: id !== "" ? orders[id].completed : false
         };
-        if(!data.name) return;
-        if(id !== "") orders[id] = {...orders[id], ...data}; else orders.push(data);
-        localStorage.setItem('naeman_orders_v2', JSON.stringify(orders));
+        if(id !== "") orders[id] = data; else orders.push(data);
+        localStorage.setItem('naeman_orders_v3', JSON.stringify(orders));
         closeModal();
         render();
     }
@@ -263,13 +257,17 @@
         document.getElementById('modal').style.display = 'flex';
     }
 
+    function showAddModal() {
+        document.getElementById('edit-id').value = "";
+        ['in-name', 'in-phone', 'in-desc', 'in-date', 'in-time'].forEach(id => document.getElementById(id).value = "");
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
     function togglePay(i) { orders[i].paid = !orders[i].paid; saveAll(); }
     function toggleComplete(i) { orders[i].completed = !orders[i].completed; saveAll(); }
-    function deleteOrder(i) { if(confirm('למחוק?')) { orders.splice(i,1); saveAll(); } }
-    function saveAll() { localStorage.setItem('naeman_orders_v2', JSON.stringify(orders)); render(); }
-    function changeTab(t) { currentTab = t; render(); }
-    function showAddModal() { document.getElementById('edit-id').value = ""; ['in-name', 'in-phone', 'in-desc', 'in-date', 'in-time'].forEach(id => document.getElementById(id).value = ""); document.getElementById('modal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function deleteOrder(i) { if(confirm('למחוק את ההזמנה?')) { orders.splice(i,1); saveAll(); } }
+    function saveAll() { localStorage.setItem('naeman_orders_v3', JSON.stringify(orders)); render(); }
 
     init();
 </script>
