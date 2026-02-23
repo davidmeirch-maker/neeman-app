@@ -96,37 +96,42 @@
     <div class="modal-content">
         <h2 class="text-xl font-black text-center mb-6">רישום הזמנה</h2>
         <input type="hidden" id="edit-id">
-<form onsubmit="event.preventDefault(); saveOrder();" class="space-y-4">
+<form onsubmit="event.preventDefault(); saveOrder();" class="space-y-5">
     <div class="flex gap-3">
         <div class="flex-[2]">
-            <label class="text-[11px] font-bold text-slate-400 mr-1">שם לקוח *</label>
-            <input type="text" id="in-name" class="form-input bg-white border-2 border-slate-100 shadow-sm" required>
+            <label class="text-sm font-extrabold text-slate-800 mr-1 mb-1 block">שם לקוח *</label>
+            <input type="text" id="in-name" class="form-input bg-white border-2 border-slate-200 shadow-sm" required>
         </div>
-        <div class="flex-[1.5]">
-            <label class="text-[11px] font-bold text-slate-400 mr-1">טלפון *</label>
-            <input type="tel" id="in-phone" class="form-input bg-white border-2 border-slate-100 shadow-sm" required>
+        <div class="flex-[1.2]">
+            <label class="text-sm font-extrabold text-slate-800 mr-1 mb-1 block">תאריך *</label>
+            <input type="date" id="in-date" class="form-input bg-white border-2 border-slate-200 shadow-sm text-sm" required>
         </div>
     </div>
     
     <div class="flex gap-3">
-        <div class="flex-1">
-            <label class="text-[11px] font-bold text-slate-400 mr-1">תאריך אספקה *</label>
-            <input type="date" id="in-date" class="form-input bg-white border-2 border-slate-100 shadow-sm text-sm" required>
+        <div class="flex-[2]">
+            <label class="text-sm font-extrabold text-slate-800 mr-1 mb-1 block">טלפון *</label>
+            <input type="tel" id="in-phone" class="form-input bg-white border-2 border-slate-200 shadow-sm" required>
         </div>
-        <div class="flex-1">
-            <label class="text-[11px] font-bold text-slate-400 mr-1">שעת איסוף *</label>
-            <input type="time" id="in-time" class="form-input bg-white border-2 border-slate-100 shadow-sm text-sm" required>
+        <div class="flex-[1.2]">
+            <label class="text-sm font-extrabold text-slate-800 mr-1 mb-1 block">שעה *</label>
+            <input type="time" id="in-time" class="form-input bg-white border-2 border-slate-200 shadow-sm text-sm" required>
         </div>
     </div>
     
     <div>
-        <label class="text-[11px] font-bold text-slate-400 mr-1">מה להכין? (פירוט מלא) *</label>
-        <textarea id="in-desc" class="form-input bg-white border-2 border-slate-100 shadow-sm text-base" rows="6" placeholder="הקלד כאן את כל פרטי המאפים..." required></textarea>
+        <label class="text-sm font-extrabold text-slate-800 mr-1 mb-1 block">מה להכין? (פירוט מלא) *</label>
+        <textarea id="in-desc" 
+            class="form-input text-base font-bold text-slate-800 shadow-md" 
+            style="background: #fff9c4; background-image: linear-gradient(#f1e6a0 1px, transparent 1px); background-size: 100% 1.6em; line-height: 1.6em; border: 2px solid #fbc02d; border-radius: 8px;"
+            rows="6" 
+            placeholder="רשום כאן הכל..." 
+            required></textarea>
     </div>
 
-    <div class="flex gap-3 pt-4">
-        <button type="button" onclick="closeModal()" class="flex-1 p-3 bg-slate-50 text-slate-400 rounded-xl font-bold">ביטול</button>
-        <button type="submit" class="flex-[2] p-3 bg-blue-600 text-white rounded-xl font-black shadow-md active:scale-95 transition-transform">שמור בפנקס</button>
+    <div class="flex gap-3 pt-2">
+        <button type="button" onclick="closeModal()" class="flex-1 p-4 bg-slate-100 text-slate-600 rounded-xl font-black">ביטול</button>
+        <button type="submit" class="flex-[2] p-4 bg-blue-700 text-white rounded-xl font-black shadow-lg text-lg active:scale-95 transition-all">שמור בפנקס</button>
     </div>
 </form>
     </div>
