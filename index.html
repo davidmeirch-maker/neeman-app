@@ -18,67 +18,75 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
-        body { font-family: 'Assistant', sans-serif; background-color: #fdfbf7; margin: 0; }
-        #auth-screen { position: fixed; inset: 0; background: #fdfbf7; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .header-bg { background: white; padding: calc(45px + env(safe-area-inset-top)) 20px 25px; border-bottom: 2px solid #f1f1f1; text-align: center; }
-        .order-card { background: white; border-radius: 12px; margin: 16px; padding: 0; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #e8e8e8; position: relative; }
-        .card-header { padding: 10px 15px; background: #fffcf5; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .card-body { padding: 15px; background-image: linear-gradient(#f1f1f1 1px, transparent 1px); background-size: 100% 28px; line-height: 28px; }
-        .order-details-box { background: transparent; min-height: 84px; color: #444; font-weight: 600; font-size: 16px; margin-bottom: 15px; padding-top: 4px; }
-        .btn-wa { background: #25D366; color: white; width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-        .btn-bell { background: white; color: #d946ef; width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; }
-        .btn-status { flex: 1; padding: 10px; border-radius: 10px; font-weight: 800; font-size: 13px; text-align: center; border: 1px solid transparent; }
-        .unpaid-btn { color: #ef4444; border-color: #fee2e2; background: #fef2f2; }
-        .paid-btn { color: #10b981; border-color: #d1fae5; background: #ecfdf5; }
-        .fab { position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px; background: #ef4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 8px 20px rgba(239,68,68,0.3); z-index: 100; }
-        .side-line { width: 4px; height: 100%; position: absolute; right: 0; top: 0; }
-        .unpaid-line { background: #ef4444; }
-        .paid-line { background: #10b981; }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
-        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; border-top: 5px solid #ef4444; }
-        input, textarea { font-size: 16px !important; padding: 12px !important; border-radius: 8px !important; background: #f9f9f9 !important; border: 1px solid #eee !important; width: 100%; outline: none; }
+        body { font-family: 'Assistant', sans-serif; background-color: #f8fafc; margin: 0; }
+        
+        #auth-screen { position: fixed; inset: 0; background: white; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        .header-bg { background: white; padding: calc(45px + env(safe-area-inset-top)) 20px 25px; border-bottom: 1px solid #e2e8f0; text-align: center; }
+        
+        .order-card { background: white; border-radius: 24px; margin: 16px; padding: 0; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; position: relative; }
+        
+        .card-header { padding: 12px 20px; background: #f8fafc; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        
+        .order-details-box { background: #fcfcfc; border: 1px dashed #e2e8f0; border-radius: 15px; padding: 15px; color: #334155; font-weight: 600; line-height: 1.6; margin-bottom: 15px; }
+        
+        .btn-wa { background: #25D366; color: white; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+        .btn-bell { background: #eff6ff; color: #3b82f6; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid #dbeafe; }
+        
+        .btn-status { flex: 1; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 14px; text-align: center; }
+        
+        .fab { position: fixed; bottom: 30px; left: 30px; width: 68px; height: 68px; background: #ef4444; color: white; border-radius: 22px; display: flex; align-items: center; justify-content: center; font-size: 35px; box-shadow: 0 10px 25px rgba(239,68,68,0.3); z-index: 100; }
+        
+        .side-line { width: 6px; height: 100%; position: absolute; right: 0; top: 0; }
+        .unpaid-line { background: #f87171; }
+        .paid-line { background: #4ade80; }
+        
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 28px; padding: 25px; }
+        
+        input, textarea { font-size: 16px !important; padding: 14px !important; border-radius: 14px !important; background: #f1f5f9 !important; border: 1px solid #e2e8f0 !important; width: 100%; outline: none; }
     </style>
 </head>
 <body>
 
 <div id="auth-screen">
     <div class="w-full max-w-xs text-center">
-        <img src="https://img.icons8.com/fluency/96/croissant.png" class="mx-auto mb-4" width="70">
-        <h2 class="text-2xl font-black text-slate-800 mb-1">מאפה נאמן</h2>
-        <p class="text-slate-400 text-sm mb-6">הזמנות וניהול פנקס</p>
+        <img src="https://img.icons8.com/fluency/96/croissant.png" class="mx-auto mb-6" width="80">
+        <h2 class="text-2xl font-black mb-2">מי רשום עכשיו?</h2>
         <input type="text" id="user-name-input" placeholder="השם שלך" class="mb-4 text-center">
-        <button onclick="handleLogin()" id="login-btn" class="w-full p-4 bg-red-500 text-white rounded-xl font-black shadow-lg">כניסה למערכת</button>
-        <p id="auth-msg" class="mt-4 text-red-500 font-bold hidden text-xs"></p>
+        <button onclick="handleLogin()" id="login-btn" class="w-full p-4 bg-red-600 text-white rounded-2xl font-black shadow-lg">כניסה</button>
+        <p id="auth-msg" class="mt-4 text-red-500 font-bold hidden text-sm"></p>
     </div>
 </div>
 
 <div id="main-app" class="hidden">
     <div class="header-bg">
-        <div class="flex justify-center mb-1"><img src="https://img.icons8.com/fluency/48/croissant.png" width="35"></div>
-        <h1 class="text-xl font-black text-slate-800">פנקס הזמנות</h1>
-        <p id="date-display" class="text-slate-400 text-[11px] font-bold"></p>
-        <button onclick="logout()" class="text-[10px] text-red-400 mt-2 font-bold underline">החלף שם משתמש</button>
+        <h1 class="text-2xl font-black text-slate-800">הזמנות נאמן</h1>
+        <p id="date-display" class="text-slate-400 text-xs font-bold"></p>
+        <button onclick="logout()" class="text-[10px] text-red-500 mt-2 font-bold uppercase underline">החלף משתמש</button>
     </div>
-    <div class="flex gap-2 p-4 max-w-md mx-auto">
-        <button onclick="changeTab('pending')" id="tab-p" class="flex-1 py-2.5 rounded-lg font-black bg-slate-800 text-white shadow-sm">בתהליך</button>
-        <button onclick="changeTab('done')" id="tab-d" class="flex-1 py-2.5 rounded-lg font-black bg-white text-slate-400 border border-slate-200">בוצעו</button>
+
+    <div class="flex gap-2 p-4">
+        <button onclick="changeTab('pending')" id="tab-p" class="flex-1 py-3 rounded-2xl font-black bg-slate-800 text-white shadow-lg">בתהליך</button>
+        <button onclick="changeTab('done')" id="tab-d" class="flex-1 py-3 rounded-2xl font-black bg-white text-slate-400 border border-slate-200">בוצעו</button>
     </div>
-    <div id="orders-list" class="pb-32 max-w-md mx-auto"></div>
+
+    <div id="orders-list" class="pb-32"></div>
     <button class="fab" onclick="showAddModal()">+</button>
 </div>
 
 <div id="modal" class="modal-overlay" onclick="if(event.target==this)closeModal()">
     <div class="modal-content">
-        <h2 class="text-xl font-black text-center mb-5">הזמנה חדשה</h2>
+        <h2 class="text-xl font-black text-center mb-5">פרטי הזמנה</h2>
         <input type="hidden" id="edit-id">
         <div class="space-y-3">
             <input type="text" id="in-name" placeholder="שם הלקוח">
-            <input type="tel" id="in-phone" placeholder="מספר טלפון">
+            <input type="tel" id="in-phone" placeholder="טלפון">
             <div class="flex gap-2"><input type="date" id="in-date" class="flex-1"><input type="time" id="in-time" class="w-28"></div>
-            <textarea id="in-desc" rows="4" placeholder="פירוט ההזמנה..."></textarea>
+            <textarea id="in-desc" rows="3" placeholder="מה להכין?"></textarea>
             <div class="flex gap-2 pt-4">
-                <button onclick="closeModal()" class="flex-1 p-3 bg-slate-50 text-slate-400 rounded-lg font-bold text-sm">ביטול</button>
-                <button onclick="saveOrder()" class="flex-[2] p-3 bg-red-500 text-white rounded-lg font-bold">שמור פנקס</button>
+                <button onclick="closeModal()" class="flex-1 p-3 bg-slate-100 text-slate-500 rounded-xl font-bold">ביטול</button>
+                <button onclick="saveOrder()" class="flex-[2] p-3 bg-red-600 text-white rounded-xl font-bold">שמור</button>
             </div>
         </div>
     </div>
@@ -86,8 +94,11 @@
 
 <div id="delete-modal" class="modal-overlay" onclick="closeDeleteModal()">
     <div class="modal-content text-center">
-        <h2 class="text-lg font-black mb-5">למחוק מהפנקס?</h2>
-        <div class="flex gap-2"><button onclick="closeDeleteModal()" class="flex-1 p-3 bg-slate-100 rounded-lg font-bold">לא</button><button id="confirm-delete-btn" class="flex-1 p-3 bg-red-500 text-white rounded-xl font-bold">מחק</button></div>
+        <h2 class="text-lg font-black mb-5">למחוק את ההזמנה?</h2>
+        <div class="flex gap-2">
+            <button onclick="closeDeleteModal()" class="flex-1 p-3 bg-slate-100 rounded-xl font-bold">לא</button>
+            <button id="confirm-delete-btn" class="flex-1 p-3 bg-red-500 text-white rounded-xl font-bold">מחק</button>
+        </div>
     </div>
 </div>
 
@@ -111,20 +122,16 @@
     function handleLogin() {
         const name = document.getElementById('user-name-input').value.trim();
         if(!name) return;
-        
-        // כאן הוספתי בדיקה מיידית
         db.ref('users/' + name).once('value', (s) => {
             if(s.exists() && s.val().approved === true) {
-                // אם המנהל כבר אישר - כנס מיד
                 currentUser = name;
                 localStorage.setItem('neeman_user', name);
                 startApp();
             } else if (!s.exists()) {
-                // אם משתמש חדש - צור אותו
                 db.ref('users/' + name).set({ approved: false });
-                showAuthMsg("נרשמת! כעת שנה ל-true ב-Firebase עבור המשתמש: " + name + " ולחץ שוב על כניסה.");
+                showAuthMsg("נרשמת! שנה ל-true ב-Firebase עבור: " + name);
             } else {
-                showAuthMsg("עדיין רשום כ-false. שנה ל-true ב-Firebase ולחץ שוב על כניסה.");
+                showAuthMsg("ממתין לאישור מנהל עבור: " + name);
             }
         });
     }
@@ -155,18 +162,18 @@
                 <div class="order-card">
                     <div class="side-line ${o.paid?'paid-line':'unpaid-line'}"></div>
                     <div class="card-header">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">${o.deliveryDate?.split('-').reverse().slice(0,2).join('/')} | ${o.deliveryTime}</span>
+                        <span class="text-[10px] font-extrabold text-slate-400 uppercase">${o.deliveryDate?.split('-').reverse().slice(0,2).join('/')} | ${o.deliveryTime}</span>
                         <div class="flex gap-4"><button onclick="editOrder('${id}')" class="text-slate-300">✎</button><button onclick="openDeleteModal('${id}')" class="text-slate-300">✕</button></div>
                     </div>
-                    <div class="card-body">
-                        <div class="flex justify-between items-start mb-2">
-                            <div><h3 class="text-lg font-black text-slate-800">${o.name}</h3><div class="text-[9px] text-blue-400 font-bold">נרשם ע"י: ${o.createdBy || 'כללי'}</div></div>
+                    <div class="card-body p-5">
+                        <div class="flex justify-between items-start mb-4">
+                            <div><h3 class="text-xl font-black text-slate-800">${o.name}</h3><div class="text-[9px] text-blue-500 font-bold uppercase">בטיפול: ${o.createdBy || 'כללי'}</div></div>
                             <div class="flex gap-2"><a href="${wa}" target="_blank" class="btn-wa">W</a><button onclick="addToCalendar('${id}')" class="btn-bell">🔔</button></div>
                         </div>
                         <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
                         <div class="flex gap-2">
-                            <button onclick="togglePay('${id}')" class="btn-status ${o.paid?'paid-btn':'unpaid-btn'}">${o.paid?'שולם ✓':'לא שולם'}</button>
-                            <button onclick="toggleComplete('${id}')" class="btn-status bg-slate-100 text-slate-700">${o.completed?'החזר':'בוצע ✅'}</button>
+                            <button onclick="togglePay('${id}')" class="btn-status ${o.paid?'bg-green-50 text-green-600':'bg-red-50 text-red-500'} border border-current opacity-60">${o.paid?'שולם ✓':'לא שולם'}</button>
+                            <button onclick="toggleComplete('${id}')" class="btn-status bg-slate-800 text-white">${o.completed?'החזר':'בוצע ✅'}</button>
                         </div>
                     </div>
                 </div>`;
@@ -201,7 +208,7 @@
 
     function togglePay(id) { db.ref('orders/'+id).update({ paid: !allOrders[id].paid }); }
     function toggleComplete(id) { db.ref('orders/'+id).update({ completed: !allOrders[id].completed }); }
-    function changeTab(t) { currentTab = t; document.getElementById('tab-p').className = `flex-1 py-2.5 rounded-lg font-black ${t==='pending'?'bg-slate-800 text-white shadow-sm':'bg-white text-slate-400 border border-slate-200'}`; document.getElementById('tab-d').className = `flex-1 py-2.5 rounded-lg font-black ${t==='done'?'bg-slate-800 text-white shadow-sm':'bg-white text-slate-400 border border-slate-200'}`; render(); }
+    function changeTab(t) { currentTab = t; document.getElementById('tab-p').className = `flex-1 py-3 rounded-2xl font-black ${t==='pending'?'bg-slate-800 text-white shadow-lg':'bg-white text-slate-400 border border-slate-200'}`; document.getElementById('tab-d').className = `flex-1 py-3 rounded-2xl font-black ${t==='done'?'bg-slate-800 text-white shadow-lg':'bg-white text-slate-400 border border-slate-200'}`; render(); }
     function showAddModal() { document.getElementById('edit-id').value = ""; ['in-name', 'in-phone', 'in-desc', 'in-date', 'in-time'].forEach(el => document.getElementById(el).value=""); document.getElementById('modal').style.display = 'flex'; }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
     function editOrder(id) { const o = allOrders[id]; document.getElementById('edit-id').value = id; document.getElementById('in-name').value = o.name; document.getElementById('in-phone').value = o.phone; document.getElementById('in-desc').value = o.details; document.getElementById('in-date').value = o.deliveryDate; document.getElementById('in-time').value = o.deliveryTime; document.getElementById('modal').style.display = 'flex'; }
@@ -209,7 +216,6 @@
     function closeDeleteModal() { document.getElementById('delete-modal').style.display = 'none'; }
     document.getElementById('confirm-delete-btn').onclick = () => { db.ref('orders/'+deleteId).remove(); closeDeleteModal(); };
 
-    // בדיקה אוטומטית אם כבר מחובר
     if(currentUser) {
         db.ref('users/' + currentUser).once('value', (s) => {
             if(s.exists() && s.val().approved === true) startApp();
