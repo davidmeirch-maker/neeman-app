@@ -10,7 +10,7 @@
     <link rel="icon" href="https://img.icons8.com/fluency/96/todo-list.png">
     <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/180/todo-list.png">
     
-    <title>הזמנות - מאפה נאמן מגדל העמק</title>
+    <title>הזמנות - נאמן</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
@@ -19,123 +19,73 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
         
-        body { 
-            font-family: 'Assistant', sans-serif; 
-            background-color: #f8fafc; 
-            margin: 0; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        body { font-family: 'Assistant', sans-serif; background-color: #f8fafc; margin: 0; -webkit-tap-highlight-color: transparent; }
 
-        /* כותרת נקייה ובהירה */
-        .header { 
-            background: white; 
-            color: #1e293b;
-            padding: calc(50px + env(safe-area-inset-top)) 20px 30px 20px; 
-            border-bottom: 2px solid #e2e8f0;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.02);
-        }
+        .header-bg { background: white; padding: calc(45px + env(safe-area-inset-top)) 20px 25px; border-bottom: 1px solid #e2e8f0; text-align: center; }
 
-        /* כרטיסיית הזמנה - מראה פנקס */
         .order-card { 
-            background: white; 
-            border-radius: 20px; 
-            margin: 16px; 
-            padding: 20px; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
-            border: 1px solid #e2e8f0;
-            border-right: 10px solid #cbd5e1; 
-            position: relative; 
+            background: white; border-radius: 24px; margin: 16px; padding: 0; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; position: relative;
         }
-        
-        .unpaid { border-right-color: #f87171; }
-        .paid { border-right-color: #4ade80; }
 
-        /* שורות של פנקס בתוך הטקסט */
+        .card-header { padding: 12px 20px; background: #f8fafc; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+
+        .card-body { padding: 20px; background: white; }
+
         .order-details-box {
-            background-image: linear-gradient(#f1f5f9 1.1rem, transparent 0);
-            background-size: 100% 1.6rem;
-            line-height: 1.6rem;
-            padding: 12px;
-            background-color: #f8fafc;
-            border-radius: 12px;
-            color: #475569;
-            font-weight: 600;
-            margin-bottom: 20px;
+            background: #fcfcfc; border: 1px dashed #e2e8f0; border-radius: 15px; padding: 15px;
+            color: #334155; font-weight: 600; line-height: 1.6; margin-bottom: 15px;
         }
 
-        .btn-wa { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; background-color: #25D366; color: white; }
+        .btn-wa { background: #25D366; color: white; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+        .btn-bell { background: #eff6ff; color: #3b82f6; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid #dbeafe; }
         
-        .btn-action { 
-            padding: 14px; 
-            border-radius: 14px; 
-            font-weight: 700; 
-            font-size: 14px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 6px; 
-        }
+        .btn-status { flex: 1; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 14px; text-align: center; }
 
         .fab { 
-            position: fixed; 
-            bottom: 35px; 
-            left: 25px; 
-            width: 70px; 
-            height: 70px; 
-            background: #3b82f6; 
-            color: white; 
-            border-radius: 22px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 40px; 
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); 
-            z-index: 100; 
-            border: none; 
+            position: fixed; bottom: 30px; left: 30px; width: 68px; height: 68px; 
+            background: #3b82f6; color: white; border-radius: 22px; display: flex; 
+            align-items: center; justify-content: center; font-size: 35px; 
+            box-shadow: 0 10px 25px rgba(59,130,246,0.4); z-index: 100;
         }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
-        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 28px; padding: 28px; }
+        .side-line { width: 6px; height: 100%; position: absolute; right: 0; top: 0; }
+        .unpaid-line { background: #f87171; }
+        .paid-line { background: #4ade80; }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 28px; padding: 25px; }
         input, textarea { font-size: 16px !important; padding: 14px !important; border-radius: 14px !important; background: #f1f5f9 !important; border: 1px solid #e2e8f0 !important; width: 100%; outline: none; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="flex justify-between items-start">
-        <div>
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight">הזמנות</h1>
-            <p class="text-slate-400 text-sm font-bold mt-1 uppercase tracking-wider">מאפה נאמן מגדל העמק</p>
-        </div>
-        <div class="text-left">
-            <p id="date-display" class="text-slate-500 font-bold text-xs"></p>
-            <div class="bg-blue-50 mt-2 p-2 px-4 rounded-xl border border-blue-100 inline-block">
-                <span id="stat-count" class="text-xl font-black text-blue-600">0</span>
-            </div>
-        </div>
-    </div>
+<div class="header-bg">
+    <div class="flex justify-center mb-1"><img src="https://img.icons8.com/fluency/48/todo-list.png" width="40"></div>
+    <h1 class="text-2xl font-black text-slate-800">הזמנות נאמן</h1>
+    <p id="date-display" class="text-slate-400 text-xs font-bold"></p>
 </div>
 
-<div class="flex gap-4 p-5">
-    <button onclick="changeTab('pending')" id="tab-p" class="flex-1 p-4 rounded-2xl font-black bg-blue-600 text-white shadow-lg">בתהליך</button>
-    <button onclick="changeTab('done')" id="tab-d" class="flex-1 p-4 rounded-2xl font-black bg-white text-slate-400 border border-slate-200">בוצעו</button>
+<div class="flex gap-2 p-4">
+    <button onclick="changeTab('pending')" id="tab-p" class="flex-1 py-3 rounded-2xl font-black bg-blue-600 text-white">בתהליך</button>
+    <button onclick="changeTab('done')" id="tab-d" class="flex-1 py-3 rounded-2xl font-black bg-white text-slate-400 border border-slate-200">בוצעו</button>
 </div>
 
-<div id="orders-list" class="pb-40"></div>
+<div id="orders-list" class="pb-32"></div>
 <button class="fab" onclick="showAddModal()">+</button>
 
 <div id="modal" class="modal-overlay" onclick="if(event.target==this)closeModal()">
     <div class="modal-content">
-        <h2 id="modal-title" class="text-2xl font-black text-center mb-6 text-slate-800">פרטי הזמנה</h2>
+        <h2 class="text-xl font-black text-center mb-5">פרטי הזמנה</h2>
         <input type="hidden" id="edit-id">
-        <div class="space-y-4">
+        <div class="space-y-3">
             <input type="text" id="in-name" placeholder="שם הלקוח">
-            <input type="tel" id="in-phone" placeholder="מספר טלפון">
-            <div class="flex gap-3"><input type="date" id="in-date" class="flex-1"><input type="time" id="in-time" class="w-32"></div>
-            <textarea id="in-desc" rows="3" placeholder="מה להכין? (מוצרים, כמות...)"></textarea>
-            <div class="flex gap-3 pt-4">
-                <button onclick="closeModal()" class="flex-1 p-4 bg-slate-100 text-slate-500 rounded-2xl font-bold">ביטול</button>
-                <button onclick="saveOrder()" class="flex-[2] p-4 bg-blue-600 text-white rounded-2xl font-black">שמור</button>
+            <input type="tel" id="in-phone" placeholder="טלפון">
+            <div class="flex gap-2"><input type="date" id="in-date" class="flex-1"><input type="time" id="in-time" class="w-28"></div>
+            <textarea id="in-desc" rows="3" placeholder="מה להכין?"></textarea>
+            <div class="flex gap-2 pt-4">
+                <button onclick="closeModal()" class="flex-1 p-3 bg-slate-100 text-slate-500 rounded-xl font-bold">ביטול</button>
+                <button onclick="saveOrder()" class="flex-[2] p-3 bg-blue-600 text-white rounded-xl font-bold">שמור</button>
             </div>
         </div>
     </div>
@@ -143,8 +93,8 @@
 
 <div id="delete-modal" class="modal-overlay" onclick="closeDeleteModal()">
     <div class="modal-content text-center">
-        <h2 class="text-xl font-black mb-6 text-slate-800">למחוק את ההזמנה?</h2>
-        <div class="flex gap-3"><button onclick="closeDeleteModal()" class="flex-1 p-4 bg-slate-100 text-slate-500 rounded-2xl font-bold">ביטול</button><button id="confirm-delete-btn" class="flex-1 p-4 bg-red-500 text-white rounded-2xl font-bold">מחק</button></div>
+        <h2 class="text-lg font-black mb-5">למחוק את ההזמנה?</h2>
+        <div class="flex gap-2"><button onclick="closeDeleteModal()" class="flex-1 p-3 bg-slate-100 rounded-xl font-bold">לא</button><button id="confirm-delete-btn" class="flex-1 p-3 bg-red-500 text-white rounded-xl font-bold">מחק</button></div>
     </div>
 </div>
 
@@ -162,53 +112,51 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database().ref('orders');
-
     let allOrders = {}; let currentTab = 'pending'; let deleteId = null;
 
     function init() {
-        const options = { weekday: 'long', day: 'numeric', month: 'short' };
-        document.getElementById('date-display').innerText = new Date().toLocaleDateString('he-IL', options);
-        db.on('value', (snapshot) => {
-            allOrders = snapshot.val() || {};
-            render();
-        });
+        document.getElementById('date-display').innerText = new Date().toLocaleDateString('he-IL', {weekday:'long', day:'numeric', month:'short'});
+        db.on('value', (s) => { allOrders = s.val() || {}; render(); });
     }
 
     function render() {
         const list = document.getElementById('orders-list');
-        const orderIds = Object.keys(allOrders);
-        const filteredIds = orderIds.filter(id => {
-            const o = allOrders[id];
-            return currentTab === 'done' ? o.completed : !o.completed;
-        }).sort((a, b) => {
-            const oA = allOrders[a], oB = allOrders[b];
-            return (oA.deliveryDate + oA.deliveryTime).localeCompare(oB.deliveryDate + oB.deliveryTime);
-        });
+        const filtered = Object.keys(allOrders).filter(id => currentTab === 'done' ? allOrders[id].completed : !allOrders[id].completed)
+            .sort((a,b) => (allOrders[a].deliveryDate+allOrders[a].deliveryTime).localeCompare(allOrders[b].deliveryDate+allOrders[b].deliveryTime));
 
-        document.getElementById('stat-count').innerText = filteredIds.length;
-        list.innerHTML = filteredIds.map((id) => {
+        list.innerHTML = filtered.map(id => {
             const o = allOrders[id];
-            const waLink = `https://wa.me/972${o.phone?.replace(/^0/, '')}?text=${encodeURIComponent('היי ' + o.name + ', בקשר להזמנה שלך ממאפה נאמן')}`;
-            const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-            const dayName = o.deliveryDate ? 'יום ' + days[new Date(o.deliveryDate).getDay()] : "";
-
+            const wa = `https://wa.me/972${o.phone?.replace(/^0/,'')}?text=${encodeURIComponent('היי '+o.name+', בקשר להזמנה שלך ממאפה נאמן')}`;
             return `
-                <div class="order-card ${o.paid ? 'paid' : 'unpaid'}">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="text-[11px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-md uppercase">${dayName} | ${o.deliveryDate?.split('-').reverse().slice(0,2).join('/') || '--/--'} | ${o.deliveryTime || '--:--'}</div>
-                        <div class="flex gap-3"><button onclick="editOrder('${id}')" class="text-slate-300">✎</button><button onclick="openDeleteModal('${id}')" class="text-slate-300">✕</button></div>
-                    </div>
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex-1"><h3 class="text-2xl font-black text-slate-700">${o.name}</h3><a href="tel:${o.phone}" class="text-blue-500 font-bold text-xs">📞 ${o.phone}</a></div>
-                        <a href="${waLink}" target="_blank" class="btn-wa"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.659 1.437 5.634 1.437h.005c6.558 0 11.894-5.335 11.897-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
-                    </div>
-                    <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
-                    <div class="space-y-3">
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="togglePay('${id}')" class="btn-action border ${o.paid ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-500 border-red-100'}">${o.paid ? 'שולם ✓' : 'לא שולם'}</button>
-                            <button onclick="addToCalendar('${id}')" class="btn-action bg-blue-50 text-blue-600 border border-blue-100">🔔 תזכורת</button>
+                <div class="order-card">
+                    <div class="side-line ${o.paid?'paid-line':'unpaid-line'}"></div>
+                    <div class="card-header">
+                        <span class="text-[11px] font-extrabold text-slate-400">${o.deliveryDate?.split('-').reverse().slice(0,2).join('/')} | ${o.deliveryTime}</span>
+                        <div class="flex gap-4">
+                            <button onclick="editOrder('${id}')" class="text-slate-300">✎</button>
+                            <button onclick="openDeleteModal('${id}')" class="text-slate-300">✕</button>
                         </div>
-                        <button onclick="toggleComplete('${id}')" class="btn-action bg-slate-800 text-white w-full font-bold shadow-sm">${o.completed ? '↩ החזר לרשימה' : 'סמן כבוצע ✅'}</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-black text-slate-800">${o.name}</h3>
+                                <a href="tel:${o.phone}" class="text-blue-500 text-xs font-bold">${o.phone}</a>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="${wa}" target="_blank" class="btn-wa"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.659 1.437 5.634 1.437h.005c6.558 0 11.894-5.335 11.897-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+                                <button onclick="addToCalendar('${id}')" class="btn-bell">🔔</button>
+                            </div>
+                        </div>
+                        <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
+                        <div class="flex gap-2">
+                            <button onclick="togglePay('${id}')" class="btn-status ${o.paid?'bg-green-50 text-green-600':'bg-red-50 text-red-500'} border border-current opacity-60">
+                                ${o.paid?'שולם ✓':'לא שולם'}
+                            </button>
+                            <button onclick="toggleComplete('${id}')" class="btn-status bg-slate-800 text-white">
+                                ${o.completed?'החזר':'בוצע ✅'}
+                            </button>
+                        </div>
                     </div>
                 </div>`;
         }).join('');
@@ -235,26 +183,17 @@
         const start = new Date(o.deliveryDate + 'T' + (o.deliveryTime || "08:00"));
         const end = new Date(start.getTime() + 30*60000);
         const format = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
-        const ics = [
-            'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
-            `DTSTART:${format(start)}`,`DTEND:${format(end)}`,
-            `SUMMARY:הזמנה: ${o.name} (נאמן)`,
-            'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',`DESCRIPTION:תזכורת יום לפני`,'END:VALARM',
-            'BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY',`DESCRIPTION:תזכורת שעה לפני`,'END:VALARM',
-            'END:VEVENT','END:VCALENDAR'
-        ].join('\r\n');
-        const link = document.createElement('a'); 
-        link.href = window.URL.createObjectURL(new Blob([ics], {type: 'text/calendar'})); 
-        link.download = `הזמנה_${o.name}.ics`; link.click();
+        const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(end)}`,`SUMMARY:הזמנה: ${o.name} (נאמן)`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','DESCRIPTION:תזכורת יום לפני','END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY','DESCRIPTION:תזכורת שעה לפני','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+        const link = document.createElement('a'); link.href = window.URL.createObjectURL(new Blob([ics], {type: 'text/calendar'})); link.download = `תזכורת_${o.name}.ics`; link.click();
     }
 
     function togglePay(id) { db.child(id).update({ paid: !allOrders[id].paid }); }
     function toggleComplete(id) { db.child(id).update({ completed: !allOrders[id].completed }); }
-    function changeTab(t) { 
-        currentTab = t; 
-        document.getElementById('tab-p').className = t === 'pending' ? 'flex-1 p-4 rounded-2xl font-black bg-blue-600 text-white shadow-lg' : 'flex-1 p-4 rounded-2xl font-black bg-white text-slate-400 border border-slate-200';
-        document.getElementById('tab-d').className = t === 'done' ? 'flex-1 p-4 rounded-2xl font-black bg-blue-600 text-white shadow-lg' : 'flex-1 p-4 rounded-2xl font-black bg-white text-slate-400 border border-slate-200';
-        render(); 
+    function changeTab(t) { 
+        currentTab = t; 
+        document.getElementById('tab-p').className = `flex-1 py-3 rounded-2xl font-black ${t==='pending'?'bg-blue-600 text-white':'bg-white text-slate-400 border border-slate-200'}`;
+        document.getElementById('tab-d').className = `flex-1 py-3 rounded-2xl font-black ${t==='done'?'bg-blue-600 text-white':'bg-white text-slate-400 border border-slate-200'}`;
+        render(); 
     }
     function showAddModal() { document.getElementById('edit-id').value = ""; ['in-name', 'in-phone', 'in-desc', 'in-date', 'in-time'].forEach(el => document.getElementById(el).value=""); document.getElementById('modal').style.display = 'flex'; }
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
