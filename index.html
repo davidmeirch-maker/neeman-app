@@ -185,57 +185,63 @@
 
     function init() { dbOrders.on('value', (s) => { allOrders = s.val() || {}; render(); }); }
 
-    function render() {
-        const list = document.getElementById('orders-list');
-        const ids = Object.keys(allOrders)
-            .filter(id => showCompleted ? allOrders[id].completed : !allOrders[id].completed)
-            .sort((a,b) => (allOrders[a].deliveryDate+allOrders[a].deliveryTime).localeCompare(allOrders[b].deliveryDate+allOrders[b].deliveryTime));
+function render() {
+    const list = document.getElementById('orders-list');
+    const ids = Object.keys(allOrders)
+        .filter(id => showCompleted ? allOrders[id].completed : !allOrders[id].completed)
+        .sort((a,b) => (allOrders[a].deliveryDate+allOrders[a].deliveryTime).localeCompare(allOrders[b].deliveryDate+allOrders[b].deliveryTime));
 
-        list.innerHTML = ids.map(id => {
-            const o = allOrders[id];
-            const d = new Date(o.deliveryDate);
-            const dayName = d.toLocaleDateString('he-IL', {weekday: 'long'});
-            const payClass = o.paid ? 'pay-success' : 'pay-pending';
-            const payText = o.paid ? 'שולם ✓' : 'לא שולם';
-            const wa = `https://wa.me/972${o.phone?.replace(/^0/,'')}?text=${encodeURIComponent('היי '+o.name+', בקשר להזמנה שלך ממאפה נאמן')}`;
+    list.innerHTML = ids.map(id => {
+        const o = allOrders[id];
+        const d = new Date(o.deliveryDate);
+        const dayName = d.toLocaleDateString('he-IL', {weekday: 'long'});
+        const payClass = o.paid ? 'pay-success' : 'pay-pending';
+        const payText = o.paid ? 'שולם ✓' : 'לא שולם';
+        const wa = `https://wa.me/972${o.phone?.replace(/^0/,'')}?text=${encodeURIComponent('היי '+o.name+', בקשר להזמנה שלך ממאפה נאמן')}`;
 
-            return `
-                <div class="order-card">
-                    <div class="card-header">
-                        <span class="text-sm font-extrabold text-slate-700">${dayName} ${o.deliveryDate?.split('-').reverse().slice(0,2).join('/')} | <span class="text-blue-600">${o.deliveryTime}</span></span>
-                        <div class="flex gap-4">
-                            <button onclick="editOrder('${id}')" class="text-slate-400 text-xs font-bold">✎ עריכה</button>
-                            <button onclick="customConfirm('למחוק לצמיתות?', () => deleteOrder('${id}'))" class="text-slate-300 text-xs font-bold">✕</button>
+        return `
+            <div class="order-card">
+                <div class="card-header">
+                    <span class="text-sm font-extrabold text-slate-700">${dayName} ${o.deliveryDate?.split('-').reverse().slice(0,2).join('/')} | <span class="text-blue-600">${o.deliveryTime}</span></span>
+                    <div class="flex gap-4">
+                        <button onclick="editOrder('${id}')" class="text-slate-400 text-xs font-bold">✎ עריכה</button>
+                        <button onclick="customConfirm('למחוק את ההזמנה של ${o.name} לצמיתות?', () => deleteOrder('${id}'))" class="text-slate-300 text-xs font-bold">✕ מחיקה</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <h3 class="text-xl font-black text-slate-800">${o.name}</h3>
+                                <span onclick="customConfirm('לשנות סטטוס תשלום עבור ${o.name}?', () => togglePay('${id}'))" class="pay-badge ${payClass}">${payText}</span>
+                            </div>
+                            <a href="tel:${o.phone}" class="text-blue-600 font-bold text-base">${o.phone}</a>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="${wa}" target="_blank" class="action-icon-btn bg-green-500 border-none"><img src="https://img.icons8.com/color/48/whatsapp.png" width="18"></a>
+                            <button onclick="addToCalendar('${id}')" class="action-icon-btn bg-white">🔔</button>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h3 class="text-xl font-black text-slate-800">${o.name}</h3>
-                                    <span onclick="customConfirm('לשנות סטטוס תשלום?', () => togglePay('${id}'))" class="pay-badge ${payClass}">${payText}</span>
-                                </div>
-                                <a href="tel:${o.phone}" class="text-blue-600 font-bold text-base">${o.phone}</a>
-                            </div>
-                            <div class="flex gap-2">
-                                <a href="${wa}" target="_blank" class="action-icon-btn bg-green-500 border-none"><img src="https://img.icons8.com/color/48/whatsapp.png" width="18"></a>
-                                <button onclick="addToCalendar('${id}')" class="action-icon-btn bg-white">🔔</button>
-                            </div>
-                        </div>
-                        <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
+                    <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
+                    <div class="flex justify-between items-end mt-3">
+                        <div class="text-[12px] text-slate-500 font-extrabold bg-slate-50 px-2 py-1 rounded border border-slate-100">נרשם: ${o.createdBy || 'צוות'}</div>
                         
-                        <div class="flex justify-between items-end mt-3">
-                            <div class="text-[12px] text-slate-500 font-extrabold bg-slate-50 px-2 py-1 rounded border border-slate-100">נרשם: ${o.createdBy || 'צוות'}</div>
-                            ${!o.completed ? 
-                                `<button onclick="customConfirm('להעביר לבוצעו (נאסף)?', () => toggleComplete('${id}', true))" class="text-[12px] font-extrabold bg-slate-800 text-white px-4 py-1.5 rounded shadow-sm">נאסף ✅</button>` 
-                                : 
-                                `<button onclick="toggleComplete('${id}', false)" class="text-[12px] font-extrabold bg-slate-400 text-white px-4 py-1.5 rounded shadow-sm">החזר לתהליך</button>`
-                            }
-                        </div>
+                        ${!o.completed ? 
+                            `<button onclick="customConfirm('האם ההזמנה נאספה?', () => toggleComplete('${id}', true))" 
+                                    class="text-[13px] font-black bg-white text-slate-800 border-2 border-slate-800 px-5 py-1.5 rounded shadow-sm active:bg-slate-50">
+                                נאסף ✓
+                            </button>` 
+                            : 
+                            `<button onclick="customConfirm('להחזיר את ההזמנה לפעילות?', () => toggleComplete('${id}', false))" 
+                                    class="text-[12px] font-extrabold bg-slate-400 text-white px-4 py-1.5 rounded shadow-sm">
+                                החזר לתפריט
+                            </button>`
+                        }
                     </div>
-                </div>`;
-        }).join('');
-    }
+                </div>
+            </div>`;
+    }).join('');
+}
 
     function toggleView() {
         showCompleted = !showCompleted;
