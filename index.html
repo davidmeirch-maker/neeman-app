@@ -100,9 +100,15 @@
             <div><label class="text-xs font-bold text-slate-500">שם לקוח *</label><input type="text" id="in-name" class="form-input" required></div>
             <div><label class="text-xs font-bold text-slate-500">טלפון *</label><input type="tel" id="in-phone" class="form-input" required></div>
             
-<div class="flex gap-3">
-    <div class="flex-1"><label class="text-xs font-bold text-slate-500">תאריך *</label><input type="date" id="in-date" class="form-input text-sm" required></div>
-    <div class="flex-1"><label class="text-xs font-bold text-slate-500">שעה *</label><input type="time" id="in-time" class="form-input text-sm" required></div>
+<div style="display: flex; gap: 10px; width: 100%;">
+    <div style="flex: 1; min-width: 0;">
+        <label class="text-xs font-bold text-slate-500">תאריך *</label>
+        <input type="date" id="in-date" class="form-input" style="width: 100%; padding: 10px; font-size: 14px;" required>
+    </div>
+    <div style="flex: 1; min-width: 0;">
+        <label class="text-xs font-bold text-slate-500">שעה *</label>
+        <input type="time" id="in-time" class="form-input" style="width: 100%; padding: 10px; font-size: 14px;" required>
+    </div>
 </div>
             
             <div><label class="text-xs font-bold text-slate-500">מה להכין? *</label><textarea id="in-desc" class="form-input" rows="3" required></textarea></div>
