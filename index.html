@@ -6,10 +6,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
-<link rel="icon" href="https://files.catbox.moe/5m6xha.png">
-<link rel="apple-touch-icon" href="https://files.catbox.moe/5m6xha.png">
+<link rel="icon" href="https://i.ibb.co/3ykXF7M/bakery-logo.png">
+<link rel="apple-touch-icon" href="https://i.ibb.co/3ykXF7M/bakery-logo.png">
 
-<img src="https://files.catbox.moe/5m6xha.png" class="logo-main" style="width: 130px; height: auto; border-radius: 0; box-shadow: none;">
+<img src="https://i.ibb.co/3ykXF7M/bakery-logo.png" class="logo-main" style="width: 140px; height: auto; border-radius: 0; box-shadow: none;">    
     
     <title>פנקס נאמן</title>
     
@@ -215,7 +215,7 @@
             const payText = o.paid ? 'שולם ✓' : 'לא שולם';
             
             // הודעת ווצאפ מעודכנת לפי בקשתך
-            const waMsg = `היי ${o.name}, אני יוצר קשר בקשר להזמנה שלך ממאפה נאמן ליום ${dayName} (${o.deliveryDate.split('-').reverse().join('/')}) בשעה ${o.deliveryTime}.\n\nפירוט ההזמנה:\n${o.details}`;
+            const waMsg = `היי ${o.name}, בקשר להזמנה שלך ממאפה נאמן:`;
             const waUrl = `https://wa.me/972${o.phone.replace(/^0/,'')}?text=${encodeURIComponent(waMsg)}`;
 
             return `
