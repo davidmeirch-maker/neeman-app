@@ -137,13 +137,12 @@
         <button type="submit" class="flex-[2.5] p-3 bg-blue-700 text-white rounded-xl font-black shadow-lg text-lg active:scale-95 transition-all">שמור בפנקס</button>
     </div>
 </form>
-<div id="confirm-modal" class="modal-overlay">
+<div id="confirm-modal" class="modal-overlay" style="z-index: 999;">
     <div class="modal-content text-center">
-        <h2 id="confirm-title" class="text-xl font-black mb-2 text-slate-800">האם אתה בטוח?</h2>
-        <p id="confirm-text" class="text-slate-500 font-bold mb-6 text-sm"></p>
+        <h2 id="confirm-text" class="text-lg font-black mb-6 text-slate-800">האם אתה בטוח?</h2>
         <div class="flex gap-3">
-            <button onclick="closeConfirm()" class="flex-1 p-3 bg-slate-100 rounded-xl font-bold">ביטול</button>
-            <button id="confirm-exec-btn" class="flex-1 p-3 bg-blue-600 text-white rounded-xl font-bold">אישור</button>
+            <button onclick="closeConfirm()" class="flex-1 p-3 bg-slate-100 rounded-xl font-bold text-slate-500">ביטול</button>
+            <button onclick="executeAction()" class="flex-1 p-3 bg-blue-600 text-white rounded-xl font-black shadow-lg">אישור</button>
         </div>
     </div>
 </div>
