@@ -9,7 +9,7 @@
 <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/992/992747.png">
 <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/128/992/992747.png">
     
-    <title>פנקס נאמן</title>
+    <title>ניהול הזמנות</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
@@ -79,7 +79,7 @@
 
 <div id="auth-screen">
     <img src="https://cdn-icons-png.flaticon.com/128/992/992747.png" class="logo-main" style="box-shadow: none; border-radius: 0;">
-    <h1 class="text-3xl font-black text-slate-800">פנקס הזמנות</h1>
+    <h1 class="text-3xl font-black text-slate-800">מערכת ניהול הזמנות</h1>
     <p class="text-slate-500 font-bold mb-8">מאפה נאמן | מגדל העמק</p>
     <div class="w-full max-w-xs">
         <input type="text" id="user-name-input" placeholder="שם העובד" class="text-center w-full mb-4 border-2 p-4 rounded-xl text-lg outline-none">
@@ -149,7 +149,7 @@
             class="form-input text-base font-bold text-slate-800 shadow-md" 
             style="background: #fff9c4; background-image: linear-gradient(#f1e6a0 1px, transparent 1px); background-size: 100% 1.6em; line-height: 1.6em; border: 2px solid #fbc02d; border-radius: 8px; padding: 12px;"
             rows="8" 
-            placeholder="רשום כאן את פרטי ההזמנה..." 
+            placeholder="רשום כאן את המוצרים והכמויות..." 
             required></textarea>
     </div>
 
@@ -232,13 +232,13 @@
                             <div>
                                 <div class="flex items-center gap-2 mb-1">
                                     <h3 class="text-xl font-black text-slate-800">${o.name}</h3>
-                                    <span onclick="customConfirm('שונה סטטוס תשלום?', () => togglePay('${id}'))" class="pay-badge ${payClass}">${payText}</span>
+                                    <span onclick="customConfirm('לעדכן תשלום?', () => togglePay('${id}'))" class="pay-badge ${payClass}">${payText}</span>
                                 </div>
                                 <a href="tel:${o.phone}" class="text-blue-600 font-bold text-base">${o.phone}</a>
                             </div>
                             <div class="flex gap-2">
                                 <a href="${waUrl}" target="_blank" class="action-icon-btn bg-green-500 border-none"><img src="https://img.icons8.com/color/48/whatsapp.png" width="18"></a>
-                                <button onclick="addToCalendar('${id}')" class="action-icon-btn bg-white">🔔</button>
+                                <button onclick="addToCalendar('${id}')" class="action-icon-btn bg-white">⏰</button>
                             </div>
                         </div>
                         <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
