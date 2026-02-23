@@ -298,7 +298,7 @@
         const o = allOrders[id];
         const start = new Date(o.deliveryDate + 'T' + o.deliveryTime);
         const format = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
-        const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(new Date(start.getTime()+1800000))}`,`SUMMARY:נאמן: ${o.name}`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+        const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(new Date(start.getTime()+1800000))}`,`SUMMARY:הזמנה מאפה נאמן: ${o.name}`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
         const link = document.createElement('a'); link.href = window.URL.createObjectURL(new Blob([ics], {type: 'text/calendar'})); link.download = `הזמנה.ics`; link.click();
     }
 
