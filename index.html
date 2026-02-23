@@ -57,7 +57,7 @@
         <div class="flex justify-center mb-1"><img src="https://img.icons8.com/fluency/48/croissant.png" width="35"></div>
         <h1 class="text-xl font-black text-slate-800">פנקס הזמנות</h1>
         <p id="date-display" class="text-slate-400 text-[11px] font-bold"></p>
-        <button onclick="logout()" class="text-[10px] text-red-400 mt-2 font-bold">התנתק (החלף שם)</button>
+        <button onclick="logout()" class="text-[10px] text-red-400 mt-2 font-bold underline">החלף שם משתמש</button>
     </div>
     <div class="flex gap-2 p-4 max-w-md mx-auto">
         <button onclick="changeTab('pending')" id="tab-p" class="flex-1 py-2.5 rounded-lg font-black bg-slate-800 text-white shadow-sm">בתהליך</button>
@@ -109,21 +109,22 @@
     let allOrders = {}; let currentTab = 'pending'; let deleteId = null;
 
     function handleLogin() {
-        const rawName = document.getElementById('user-name-input').value;
-        const name = rawName.trim(); // מנקה רווחים
+        const name = document.getElementById('user-name-input').value.trim();
         if(!name) return;
         
-        const userRef = db.ref('users/' + name);
-        userRef.once('value', (s) => {
-            if(!s.exists()) {
-                userRef.set({ approved: false });
-                showAuthMsg("נרשמת! בקש מהמנהל לאשר את המשתמש: " + name);
-            } else if(s.val().approved === false) {
-                showAuthMsg("ממתין לאישור מנהל עבור: " + name);
-            } else {
+        // כאן הוספתי בדיקה מיידית
+        db.ref('users/' + name).once('value', (s) => {
+            if(s.exists() && s.val().approved === true) {
+                // אם המנהל כבר אישר - כנס מיד
                 currentUser = name;
                 localStorage.setItem('neeman_user', name);
                 startApp();
+            } else if (!s.exists()) {
+                // אם משתמש חדש - צור אותו
+                db.ref('users/' + name).set({ approved: false });
+                showAuthMsg("נרשמת! כעת שנה ל-true ב-Firebase עבור המשתמש: " + name + " ולחץ שוב על כניסה.");
+            } else {
+                showAuthMsg("עדיין רשום כ-false. שנה ל-true ב-Firebase ולחץ שוב על כניסה.");
             }
         });
     }
@@ -132,7 +133,7 @@
     function logout() { localStorage.removeItem('neeman_user'); location.reload(); }
 
     function startApp() {
-        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('main-app').classList.remove('hidden');
         initData();
     }
@@ -140,15 +141,6 @@
     function initData() {
         document.getElementById('date-display').innerText = new Date().toLocaleDateString('he-IL', {weekday:'long', day:'numeric', month:'short'});
         db.ref('orders').on('value', (s) => { allOrders = s.val() || {}; render(); });
-        
-        // מנגנון האזנה למקרה שהמנהל מאשר בזמן אמת
-        if(currentUser) {
-            db.ref('users/' + currentUser).on('value', (s) => {
-                if(s.exists() && s.val().approved === false) {
-                    logout();
-                }
-            });
-        }
     }
 
     function render() {
@@ -217,16 +209,11 @@
     function closeDeleteModal() { document.getElementById('delete-modal').style.display = 'none'; }
     document.getElementById('confirm-delete-btn').onclick = () => { db.ref('orders/'+deleteId).remove(); closeDeleteModal(); };
 
-    // בדיקה ראשונית של אישור
+    // בדיקה אוטומטית אם כבר מחובר
     if(currentUser) {
         db.ref('users/' + currentUser).once('value', (s) => {
-            if(s.exists() && s.val().approved === true) {
-                startApp();
-            } else {
-                // אם המשתמש בזיכרון אבל ב-Firebase הוא לא מאושר
-                localStorage.removeItem('neeman_user');
-                location.reload();
-            }
+            if(s.exists() && s.val().approved === true) startApp();
+            else localStorage.removeItem('neeman_user');
         });
     }
 </script>
