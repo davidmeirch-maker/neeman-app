@@ -6,8 +6,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
-    <link rel="icon" href="https://img.icons8.com/color/100/restaurant-menu.png">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/color/100/restaurant-menu.png">
+    <link rel="icon" href="https://files.catbox.moe/97p5d5.png">
+    <link rel="apple-touch-icon" href="https://files.catbox.moe/97p5d5.png">
     
     <title>פנקס נאמן</title>
     
@@ -17,9 +17,16 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
-        body { font-family: 'Assistant', sans-serif; background-color: #f1f5f9; margin: 0; }
+        body { font-family: 'Assistant', sans-serif; background-color: #f8fafc; margin: 0; }
 
-        #auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: white; padding: 20px; text-align: center; }
+        #auth-screen { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 100vh; background: white; padding: 20px; text-align: center; 
+        }
+        .logo-main {
+            width: 100px; height: 100px; border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 20px;
+        }
 
         .header-bg { background: white; padding: calc(20px + env(safe-area-inset-top)) 20px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; position: relative; }
 
@@ -58,26 +65,22 @@
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
         .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 12px; padding: 25px; }
-        .form-input { padding: 12px; border-radius: 8px; border: 2px solid #e2e8f0; width: 100%; outline: none; font-size: 16px; }
+        .form-input { padding: 10px; border-radius: 8px; border: 2px solid #e2e8f0; width: 100%; outline: none; font-size: 16px; }
 
-        .archive-toggle { position: absolute; top: 15px; right: 15px; font-size: 11px; font-weight: 800; color: #64748b; border: 1px solid #e2e8f0; padding: 4px 8px; border-radius: 5px; background: #f8fafc; display: flex; align-items: center; gap: 4px; }
-
-        /* כפתור נאסף - לבן עם V */
         .btn-nasaf {
             background: white !important; color: #1e293b !important;
             border: 2px solid #1e293b !important; font-weight: 900;
             padding: 5px 15px; border-radius: 6px; font-size: 13px;
             cursor: pointer;
         }
-        .btn-nasaf:active { background: #f1f5f9 !important; transform: scale(0.95); }
     </style>
 </head>
 <body>
 
 <div id="auth-screen">
-    <img src="https://img.icons8.com/color/100/restaurant-menu.png" width="75" class="mb-4">
+    <img src="https://files.catbox.moe/97p5d5.png" class="logo-main">
     <h1 class="text-3xl font-black text-slate-800">פנקס הזמנות</h1>
-    <p class="text-slate-800 font-bold mb-8 text-lg">מגדל העמק <span class="text-sm text-slate-500 font-normal">מאפה נאמן</span></p>
+    <p class="text-slate-500 font-bold mb-8">מאפה נאמן | מגדל העמק</p>
     <div class="w-full max-w-xs">
         <input type="text" id="user-name-input" placeholder="שם העובד" class="text-center w-full mb-4 border-2 p-4 rounded-xl text-lg outline-none">
         <button onclick="handleLogin()" class="w-full p-4 bg-blue-600 text-white rounded-xl font-black text-xl">כניסה</button>
@@ -87,65 +90,17 @@
 
 <div id="main-app" class="hidden">
     <div class="header-bg">
-        <button onclick="toggleView()" id="view-btn" class="archive-toggle">
-            <img src="https://img.icons8.com/ios-filled/50/64748b/book.png" width="12">
+        <button onclick="toggleView()" id="view-btn" class="absolute top-4 right-4 text-[11px] font-bold text-slate-500 border px-2 py-1 rounded bg-slate-50 flex items-center gap-1">
+            <img src="https://img.icons8.com/ios-filled/50/64748b/book.png" width="10">
             <span>בוצעו</span>
         </button>
         <button onclick="logout()" class="absolute top-4 left-4 text-[10px] font-bold text-slate-400 border px-2 py-1 rounded">החלף</button>
         <h1 class="text-2xl font-black text-slate-800 mt-4">פנקס הזמנות</h1>
-        <div class="text-lg font-bold text-slate-800">מגדל העמק <span class="text-sm font-normal text-slate-500">מאפה נאמן</span></div>
+        <div class="text-sm font-bold text-slate-500">מאפה נאמן | <span class="text-blue-600">מגדל העמק</span></div>
     </div>
 
     <div id="orders-list" class="pb-32"></div>
     <button class="fab" onclick="showAddModal()">+</button>
-</div>
-
-<div id="modal" class="modal-overlay" onclick="if(event.target==this)closeModal()">
-    <div class="modal-content">
-        <h2 class="text-xl font-black text-center mb-6">רישום הזמנה</h2>
-        <input type="hidden" id="edit-id">
-        <form onsubmit="event.preventDefault(); saveOrder();" class="space-y-3">
-            
-            <div class="flex justify-between items-end">
-                <div style="flex: 0 0 110px;">
-                    <label class="text-[11px] font-black text-slate-800 block mr-1 italic">תאריך *</label>
-                    <input type="date" id="in-date" class="form-input bg-white border-2 border-slate-300 p-2 text-sm shadow-sm font-bold" required>
-                </div>
-                
-                <div style="flex: 0 0 165px;">
-                    <label class="text-[11px] font-black text-slate-800 block mr-1 italic">שם לקוח *</label>
-                    <input type="text" id="in-name" class="form-input bg-white border-2 border-slate-300 p-2 text-sm shadow-sm font-bold" required>
-                </div>
-            </div>
-            
-            <div class="flex justify-between items-end">
-                <div style="flex: 0 0 110px;">
-                    <label class="text-[11px] font-black text-slate-800 block mr-1 italic">שעה *</label>
-                    <input type="time" id="in-time" class="form-input bg-white border-2 border-slate-300 p-2 text-sm shadow-sm font-bold" required>
-                </div>
-                
-                <div style="flex: 0 0 165px;">
-                    <label class="text-[11px] font-black text-slate-800 block mr-1 italic">טלפון *</label>
-                    <input type="tel" id="in-phone" class="form-input bg-white border-2 border-slate-300 p-2 text-sm shadow-sm font-bold" required>
-                </div>
-            </div>
-            
-            <div class="pt-1">
-                <label class="text-sm font-black text-slate-800 mb-1 block italic">מה להכין? (פירוט ההזמנה) *</label>
-                <textarea id="in-desc" 
-                    class="form-input text-base font-bold text-slate-800 shadow-md" 
-                    style="background: #fff9c4; background-image: linear-gradient(#f1e6a0 1px, transparent 1px); background-size: 100% 1.6em; line-height: 1.6em; border: 2px solid #fbc02d; border-radius: 8px; padding: 12px;"
-                    rows="8" 
-                    placeholder="רשום כאן את פרטי ההזמנה..." 
-                    required></textarea>
-            </div>
-
-            <div class="flex gap-3 pt-2">
-                <button type="button" onclick="closeModal()" class="flex-1 p-3 bg-slate-100 text-slate-500 rounded-xl font-bold text-sm">ביטול</button>
-                <button type="submit" class="flex-[2.5] p-3 bg-blue-700 text-white rounded-xl font-black shadow-lg text-lg active:scale-95 transition-all">שמור בפנקס</button>
-            </div>
-        </form>
-    </div>
 </div>
 
 <div id="confirm-modal" class="modal-overlay" style="z-index: 999;">
@@ -155,6 +110,43 @@
             <button onclick="closeConfirm()" class="flex-1 p-3 bg-slate-100 rounded-xl font-bold text-slate-500">ביטול</button>
             <button onclick="executeAction()" class="flex-1 p-3 bg-blue-600 text-white rounded-xl font-black shadow-lg">אישור</button>
         </div>
+    </div>
+</div>
+
+<div id="modal" class="modal-overlay" onclick="if(event.target==this)closeModal()">
+    <div class="modal-content">
+        <h2 class="text-xl font-black text-center mb-6">רישום הזמנה</h2>
+        <input type="hidden" id="edit-id">
+        <form onsubmit="event.preventDefault(); saveOrder();" class="space-y-3">
+            <div class="flex gap-2">
+                <div class="flex-1">
+                    <label class="text-[11px] font-black block mr-1 italic">תאריך *</label>
+                    <input type="date" id="in-date" class="form-input font-bold" required>
+                </div>
+                <div class="flex-[1.5]">
+                    <label class="text-[11px] font-black block mr-1 italic">שם לקוח *</label>
+                    <input type="text" id="in-name" class="form-input font-bold" required>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <div class="flex-1">
+                    <label class="text-[11px] font-black block mr-1 italic">שעה *</label>
+                    <input type="time" id="in-time" class="form-input font-bold" required>
+                </div>
+                <div class="flex-[1.5]">
+                    <label class="text-[11px] font-black block mr-1 italic">טלפון *</label>
+                    <input type="tel" id="in-phone" class="form-input font-bold" required>
+                </div>
+            </div>
+            <div>
+                <label class="text-sm font-black mb-1 block italic">פרטי ההזמנה *</label>
+                <textarea id="in-desc" class="form-input font-bold" style="background: #fff9c4; border: 2px solid #fbc02d;" rows="6" required></textarea>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="closeModal()" class="flex-1 p-3 bg-slate-100 text-slate-500 rounded-xl font-bold">ביטול</button>
+                <button type="submit" class="flex-[2.5] p-3 bg-blue-700 text-white rounded-xl font-black shadow-lg">שמור בפנקס</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -176,7 +168,7 @@
     let currentUser = localStorage.getItem('neeman_user');
     let allOrders = {}; 
     let showCompleted = false;
-    let actionToExecute = null; // משתנה לשמירת הפעולה של האישור
+    let actionToExecute = null;
 
     function handleLogin() {
         const name = document.getElementById('user-name-input').value.trim();
@@ -184,13 +176,14 @@
         database.ref('users/' + name).once('value', (s) => {
             if(s.exists() && s.val().approved) {
                 currentUser = name; localStorage.setItem('neeman_user', name); startApp();
-            } else if (!s.exists()) {
-                database.ref('users/' + name).set({ approved: false }); showAuthMsg("ממתין לאישור מנהל...");
-            } else { showAuthMsg("ממתין לאישור מנהל..."); }
+            } else {
+                database.ref('users/' + name).set({ approved: false });
+                document.getElementById('auth-msg').innerText = "ממתין לאישור מנהל...";
+                document.getElementById('auth-msg').classList.remove('hidden');
+            }
         });
     }
 
-    function showAuthMsg(m) { const el = document.getElementById('auth-msg'); el.innerText = m; el.classList.remove('hidden'); }
     function logout() { localStorage.removeItem('neeman_user'); location.reload(); }
     function startApp() { document.getElementById('auth-screen').style.display = 'none'; document.getElementById('main-app').classList.remove('hidden'); init(); }
 
@@ -198,32 +191,32 @@
 
     function render() {
         const list = document.getElementById('orders-list');
-        if (!allOrders || Object.keys(allOrders).length === 0) { list.innerHTML = '<p class="text-center mt-10 font-bold text-slate-400">אין הזמנות כרגע...</p>'; return; }
-
-        const ids = Object.keys(allOrders)
+        const filteredIds = Object.keys(allOrders)
             .filter(id => showCompleted ? allOrders[id].completed : !allOrders[id].completed)
             .sort((a,b) => (allOrders[a].deliveryDate+allOrders[a].deliveryTime).localeCompare(allOrders[b].deliveryDate+allOrders[b].deliveryTime));
 
-        list.innerHTML = ids.map(id => {
+        if (filteredIds.length === 0) { list.innerHTML = '<p class="text-center mt-10 font-bold text-slate-400">אין הזמנות כרגע...</p>'; return; }
+
+        list.innerHTML = filteredIds.map(id => {
             const o = allOrders[id];
-            
-            // המרת התאריך ליום בשבוע
             const d = new Date(o.deliveryDate);
             const dayName = d.toLocaleDateString('he-IL', {weekday: 'long'});
-
             const payClass = o.paid ? 'pay-success' : 'pay-pending';
             const payText = o.paid ? 'שולם ✓' : 'לא שולם';
-            const wa = `https://wa.me/972${o.phone?.replace(/^0/,'')}?text=${encodeURIComponent('היי '+o.name+', כאן ממאפה נאמן, בקשר להזמנה שלך')}`;
+            
+            // הודעת ווצאפ מעודכנת לפי בקשתך
+            const waMsg = `היי ${o.name}, אני יוצר קשר בקשר להזמנה שלך ממאפה נאמן ליום ${dayName} (${o.deliveryDate.split('-').reverse().join('/')}) בשעה ${o.deliveryTime}.\n\nפירוט ההזמנה:\n${o.details}`;
+            const waUrl = `https://wa.me/972${o.phone.replace(/^0/,'')}?text=${encodeURIComponent(waMsg)}`;
 
             return `
                 <div class="order-card">
                     <div class="card-header">
                         <span class="text-sm font-extrabold text-slate-700">
-                            ${dayName} ${o.deliveryDate?.split('-').reverse().slice(0,2).join('/')} | <span class="text-blue-600">${o.deliveryTime}</span>
+                            ${dayName} ${o.deliveryDate.split('-').reverse().slice(0,2).join('/')} | <span class="text-blue-600">${o.deliveryTime}</span>
                         </span>
                         <div class="flex gap-4">
                             <button onclick="editOrder('${id}')" class="text-slate-400 text-xs font-bold">✎ עריכה</button>
-                            <button onclick="customConfirm('למחוק את ההזמנה לצמיתות?', () => deleteOrder('${id}'))" class="text-slate-300 text-xs font-bold">✕ מחיקה</button>
+                            <button onclick="customConfirm('למחוק?', () => deleteOrder('${id}'))" class="text-slate-300 text-xs font-bold">✕</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -231,23 +224,21 @@
                             <div>
                                 <div class="flex items-center gap-2 mb-1">
                                     <h3 class="text-xl font-black text-slate-800">${o.name}</h3>
-                                    <span onclick="customConfirm('לשנות סטטוס תשלום?', () => togglePay('${id}'))" class="pay-badge ${payClass}">${payText}</span>
+                                    <span onclick="customConfirm('שונה סטטוס תשלום?', () => togglePay('${id}'))" class="pay-badge ${payClass}">${payText}</span>
                                 </div>
                                 <a href="tel:${o.phone}" class="text-blue-600 font-bold text-base">${o.phone}</a>
                             </div>
                             <div class="flex gap-2">
-                                <a href="${wa}" target="_blank" class="action-icon-btn bg-green-500 border-none"><img src="https://img.icons8.com/color/48/whatsapp.png" width="18"></a>
+                                <a href="${waUrl}" target="_blank" class="action-icon-btn bg-green-500 border-none"><img src="https://img.icons8.com/color/48/whatsapp.png" width="18"></a>
                                 <button onclick="addToCalendar('${id}')" class="action-icon-btn bg-white">🔔</button>
                             </div>
                         </div>
                         <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
                         <div class="flex justify-between items-end mt-3">
-                            <div class="text-[11px] text-slate-400 font-bold italic">נרשם ע"י: ${o.createdBy || 'צוות'}</div>
-                            
+                            <div class="text-[10px] text-slate-400 font-bold italic">עובד: ${o.createdBy || ''}</div>
                             ${!o.completed ? 
-                                `<button onclick="customConfirm('ההזמנה נאספה?', () => toggleComplete('${id}', true))" class="btn-nasaf">נאסף ✓</button>` 
-                                : 
-                                `<button onclick="customConfirm('להחזיר לטיפול?', () => toggleComplete('${id}', false))" class="text-[12px] font-bold bg-slate-400 text-white px-3 py-1 rounded shadow-sm">החזר</button>`
+                                `<button onclick="customConfirm('ההזמנה נאספה?', () => toggleComplete('${id}', true))" class="btn-nasaf">נאסף ✓</button>` : 
+                                `<button onclick="customConfirm('להחזיר לטיפול?', () => toggleComplete('${id}', false))" class="text-[12px] font-bold bg-slate-400 text-white px-3 py-1 rounded">החזר</button>`
                             }
                         </div>
                     </div>
@@ -255,36 +246,19 @@
         }).join('');
     }
 
-    // === מנגנון האישור שתמיד עובד ===
     function customConfirm(text, callback) {
         document.getElementById('confirm-text').innerText = text;
         actionToExecute = callback;
         document.getElementById('confirm-modal').style.display = 'flex';
     }
 
-    function executeAction() {
-        if (typeof actionToExecute === 'function') {
-            actionToExecute();
-        }
-        closeConfirm();
-    }
+    function executeAction() { if (actionToExecute) actionToExecute(); closeConfirm(); }
+    function closeConfirm() { document.getElementById('confirm-modal').style.display = 'none'; actionToExecute = null; }
 
-    function closeConfirm() {
-        document.getElementById('confirm-modal').style.display = 'none';
-        actionToExecute = null;
-    }
-
-    // === פעולות בסיסיות ===
     function togglePay(id) { dbOrders.child(id).update({ paid: !allOrders[id].paid }); }
     function toggleComplete(id, status) { dbOrders.child(id).update({ completed: status }); }
     function deleteOrder(id) { dbOrders.child(id).remove(); }
-
-    function toggleView() {
-        showCompleted = !showCompleted;
-        const btnText = showCompleted ? "פעילות" : "בוצעו";
-        document.getElementById('view-btn').innerHTML = `<img src="https://img.icons8.com/ios-filled/50/64748b/book.png" width="12"> <span>${btnText}</span>`;
-        render();
-    }
+    function toggleView() { showCompleted = !showCompleted; document.getElementById('view-btn').querySelector('span').innerText = showCompleted ? "פעילות" : "בוצעו"; render(); }
 
     function saveOrder() {
         const id = document.getElementById('edit-id').value;
