@@ -24,14 +24,12 @@
 
         .header-bg { background: white; padding: calc(20px + env(safe-area-inset-top)) 20px 15px; text-align: center; border-bottom: 1px solid #e2e8f0; }
 
-        /* כרטיסיית פתק עם ספירלה צדית */
         .order-card { 
             background: white; border-radius: 8px; margin: 12px 16px; padding: 0; 
             border: 1.5px solid #cbd5e1; position: relative;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05); overflow: hidden;
         }
 
-        /* ספירלה צדית */
         .order-card::before {
             content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 12px;
             background-image: radial-gradient(#94a3b8 25%, transparent 25%);
@@ -39,7 +37,6 @@
         }
 
         .card-header { padding: 8px 25px 8px 12px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        
         .text-date-info { font-size: 15px; font-weight: 800; color: #334155; }
 
         .card-body { padding: 12px 25px 12px 12px; }
@@ -49,7 +46,6 @@
             color: #1e293b; font-weight: 600; line-height: 1.4; margin: 10px 0; font-size: 16px;
         }
 
-        /* אייקונים בפרופורציה קטנה יותר */
         .action-icon-btn { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; }
         .btn-wa-green { background: #22c55e; border: none; }
 
@@ -63,9 +59,9 @@
         }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
-        .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 12px; padding: 25px; }
+        .modal-content { background: white; width: 100%; max-width: 450px; border-radius: 12px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         
-        .form-input { padding: 12px; border-radius: 8px; border: 2px solid #e2e8f0; width: 100%; outline: none; font-size: 16px; }
+        .form-input { padding: 12px; border-radius: 8px; border: 2px solid #e2e8f0; width: 100%; outline: none; font-size: 16px; background: #fcfcfc; }
     </style>
 </head>
 <body>
@@ -99,14 +95,13 @@
 
 <div id="modal" class="modal-overlay" onclick="if(event.target==this)closeModal()">
     <div class="modal-content">
-        <h2 class="text-xl font-black text-center mb-6">רישום הזמנה</h2>
+        <h2 class="text-xl font-black text-center mb-6 border-b pb-2">רישום הזמנה</h2>
         <input type="hidden" id="edit-id">
         <form onsubmit="event.preventDefault(); saveOrder();" class="space-y-4">
             <div><label class="text-xs font-bold text-slate-500">שם לקוח *</label><input type="text" id="in-name" class="form-input" required></div>
             <div><label class="text-xs font-bold text-slate-500">טלפון *</label><input type="tel" id="in-phone" class="form-input" required></div>
-            <div class="flex gap-3">
-                <div class="flex-1"><label class="text-xs font-bold text-slate-500">תאריך *</label><input type="date" id="in-date" class="form-input" required></div>
-                <div class="w-32"><label class="text-xs font-bold text-slate-500">שעה *</label><input type="time" id="in-time" class="form-input" required></div>
+            <div class="flex gap-4"> <div class="flex-1"><label class="text-xs font-bold text-slate-500">תאריך *</label><input type="date" id="in-date" class="form-input" required></div>
+                <div class="flex-1"><label class="text-xs font-bold text-slate-500">שעה *</label><input type="time" id="in-time" class="form-input" required></div>
             </div>
             <div><label class="text-xs font-bold text-slate-500">מה להכין? *</label><textarea id="in-desc" class="form-input" rows="3" required></textarea></div>
             <div class="flex gap-3 pt-2">
@@ -114,6 +109,17 @@
                 <button type="submit" class="flex-[2] p-3 bg-blue-600 text-white rounded-xl font-bold">שמור</button>
             </div>
         </form>
+    </div>
+</div>
+
+<div id="confirm-modal" class="modal-overlay">
+    <div class="modal-content text-center">
+        <h2 id="confirm-title" class="text-xl font-black mb-2 text-slate-800">האם אתה בטוח?</h2>
+        <p id="confirm-text" class="text-slate-500 font-bold mb-6 text-sm"></p>
+        <div class="flex gap-3">
+            <button onclick="closeConfirm()" class="flex-1 p-3 bg-slate-100 rounded-xl font-bold">ביטול</button>
+            <button id="confirm-exec-btn" class="flex-1 p-3 bg-blue-600 text-white rounded-xl font-bold">אישור</button>
+        </div>
     </div>
 </div>
 
@@ -151,9 +157,7 @@
     function logout() { localStorage.removeItem('neeman_user'); location.reload(); }
     function startApp() { document.getElementById('auth-screen').style.display = 'none'; document.getElementById('main-app').classList.remove('hidden'); init(); }
 
-    function init() {
-        dbOrders.on('value', (s) => { allOrders = s.val() || {}; render(); });
-    }
+    function init() { dbOrders.on('value', (s) => { allOrders = s.val() || {}; render(); }); }
 
     function render() {
         const list = document.getElementById('orders-list');
@@ -171,7 +175,7 @@
                         <span class="text-date-info">${dayName} ${o.deliveryDate?.split('-').reverse().slice(0,2).join('/')} | <span class="text-blue-600">${o.deliveryTime}</span></span>
                         <div class="flex gap-3">
                             <button onclick="editOrder('${id}')" class="text-slate-400 text-sm">✎</button>
-                            <button onclick="confirmDelete('${id}')" class="text-slate-400 text-sm">✕</button>
+                            <button onclick="customConfirm('למחוק לצמיתות?', () => deleteOrder('${id}'))" class="text-slate-400 text-sm">✕</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -189,10 +193,10 @@
                         </div>
                         <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
                         <div class="flex gap-2 mt-3">
-                            <button onclick="confirmTogglePay('${id}')" class="btn-status ${o.paid?'bg-green-100 text-green-700':'bg-red-50 text-red-600 border'}">
+                            <button onclick="customConfirm('לשנות סטטוס תשלום?', () => togglePay('${id}'))" class="btn-status ${o.paid?'bg-green-100 text-green-700':'bg-red-50 text-red-600 border'}">
                                 ${o.paid?'שולם ✓':'לא שולם'}
                             </button>
-                            <button onclick="confirmToggleComplete('${id}')" class="btn-status bg-slate-800 text-white">
+                            <button onclick="customConfirm('${o.completed?'להחזיר לתהליך?':'לסמן כבוצע?'}', () => toggleComplete('${id}'))" class="btn-status bg-slate-800 text-white">
                                 ${o.completed?'החזר':'בוצע ✅'}
                             </button>
                         </div>
@@ -218,10 +222,18 @@
         closeModal();
     }
 
-    function confirmTogglePay(id) { if(confirm("לשנות סטטוס תשלום?")) dbOrders.child(id).update({ paid: !allOrders[id].paid }); }
-    function confirmToggleComplete(id) { if(confirm("האם לסמן כבוצע/להחזיר?")) dbOrders.child(id).update({ completed: !allOrders[id].completed }); }
-    function confirmDelete(id) { if(confirm("למחוק לצמיתות?")) dbOrders.child(id).remove(); }
-    
+    /* פונקציות אישור חדשות */
+    function customConfirm(text, callback) {
+        document.getElementById('confirm-text').innerText = text;
+        const btn = document.getElementById('confirm-exec-btn');
+        btn.onclick = () => { callback(); closeConfirm(); };
+        document.getElementById('confirm-modal').style.display = 'flex';
+    }
+    function closeConfirm() { document.getElementById('confirm-modal').style.display = 'none'; }
+    function togglePay(id) { dbOrders.child(id).update({ paid: !allOrders[id].paid }); }
+    function toggleComplete(id) { dbOrders.child(id).update({ completed: !allOrders[id].completed }); }
+    function deleteOrder(id) { dbOrders.child(id).remove(); }
+
     function addToCalendar(id) {
         const o = allOrders[id];
         const start = new Date(o.deliveryDate + 'T' + o.deliveryTime);
