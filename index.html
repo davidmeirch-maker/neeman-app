@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="מאפה נאמן">
+    <meta name="apple-mobile-web-app-title" content="הזמנות נאמן">
     
-    <link rel="icon" href="https://img.icons8.com/fluency/96/croissant.png">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/180/croissant.png">
+    <link rel="icon" href="https://img.icons8.com/fluency/96/clipboard-list.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/180/clipboard-list.png">
     
-    <title>מאפה נאמן - ניהול משותף</title>
+    <title>הזמנות - מאפה נאמן מגדל העמק</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
@@ -29,15 +29,23 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
         .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 35px; padding: 28px; }
         input, textarea { font-size: 17px !important; padding: 15px !important; border-radius: 15px !important; background: #f8fafc !important; border: 1px solid #e2e8f0 !important; width: 100%; outline: none; }
-        input[type="date"]::before, input[type="time"]::before { content: attr(placeholder); color: #94a3b8; margin-left: 10px; font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="flex justify-between items-center">
-        <div><h1 class="text-2xl font-black italic">🥐 מאפה נאמן</h1><p id="date-display" class="text-slate-400 text-xs mt-1 font-bold"></p></div>
-        <div class="bg-white/10 p-3 px-5 rounded-2xl border border-white/10 text-center"><div id="stat-count" class="text-2xl font-black">0</div><div class="text-[10px] font-bold opacity-60">הזמנות</div></div>
+    <div class="flex justify-between items-start">
+        <div>
+            <h1 class="text-3xl font-black tracking-tight">הזמנות</h1>
+            <p class="text-slate-300 text-sm font-bold mt-1">מאפה נאמן מגדל העמק</p>
+        </div>
+        <div class="text-left">
+            <p id="date-display" class="text-white font-bold text-sm opacity-90"></p>
+            <div class="bg-white/10 mt-2 p-2 px-4 rounded-xl border border-white/10 inline-block">
+                <span id="stat-count" class="text-xl font-black">0</span>
+                <span class="text-[10px] font-bold opacity-60 mr-1">הזמנות</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -56,7 +64,7 @@
         <div class="space-y-4">
             <input type="text" id="in-name" placeholder="שם הלקוח">
             <input type="tel" id="in-phone" placeholder="מספר טלפון">
-            <div class="flex gap-3"><input type="date" id="in-date" placeholder="תאריך:" class="flex-1"><input type="time" id="in-time" placeholder="שעה:" class="w-32"></div>
+            <div class="flex gap-3"><input type="date" id="in-date" class="flex-1"><input type="time" id="in-time" class="w-32"></div>
             <textarea id="in-desc" rows="3" placeholder="מה להכין?"></textarea>
             <div class="flex gap-3 pt-4"><button onclick="closeModal()" class="flex-1 p-4 bg-slate-100 text-slate-600 rounded-2xl font-black">ביטול</button><button onclick="saveOrder()" class="flex-[2] p-4 bg-slate-900 text-white rounded-2xl font-black shadow-lg">שמור</button></div>
         </div>
@@ -72,7 +80,6 @@
 </div>
 
 <script>
-    // --- הגדרות FIREBASE שלך ---
     const firebaseConfig = {
       apiKey: "AIzaSyAVFQhIlCfJ6fyWaqKwyYR0Zmc7durLZXI",
       authDomain: "neeman-orders.firebaseapp.com",
@@ -92,7 +99,8 @@
     let deleteId = null;
 
     function init() {
-        document.getElementById('date-display').innerText = new Date().toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' });
+        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+        document.getElementById('date-display').innerText = new Date().toLocaleDateString('he-IL', options);
         db.on('value', (snapshot) => {
             allOrders = snapshot.val() || {};
             render();
@@ -161,7 +169,7 @@
         const start = new Date(o.deliveryDate + 'T' + (o.deliveryTime || "08:00"));
         const end = new Date(start.getTime() + 30*60000);
         const format = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
-        const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(end)}`,`SUMMARY:הזמנה: ${o.name} (מאפה נאמן)`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',`DESCRIPTION:תזכורת יום לפני`,'END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY',`DESCRIPTION:תזכורת שעה לפני`,'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+        const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(end)}`,`SUMMARY:הזמנה: ${o.name} (נאמן)`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',`DESCRIPTION:תזכורת יום לפני`,'END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY',`DESCRIPTION:תזכורת שעה לפני`,'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
         const link = document.createElement('a'); link.href = window.URL.createObjectURL(new Blob([ics], {type: 'text/calendar'})); link.download = `תזכורת.ics`; link.click();
     }
 
