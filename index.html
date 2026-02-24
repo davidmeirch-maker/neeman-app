@@ -240,13 +240,14 @@
                                 <a href="tel:${o.phone}" class="text-blue-600 font-bold text-base">${o.phone}</a>
                             </div>
                             <div class="flex gap-2">
-                                <a href="${waUrl}" target="_blank" class="action-icon-btn bg-green-500 border-none"><img src="https://img.icons8.com/color/48/whatsapp.png" width="18"></a>
-                                <button onclick="addToCalendar('${id}')" class="action-icon-btn bg-white">⏰</button>
+<a href="${waUrl}" target="_blank" class="action-icon-btn rounded-full border-2 border-green-500 bg-transparent">
+    <img src="https://img.icons8.com/color/48/whatsapp.png" width="20">
+</a>                                <button onclick="addToCalendar('${id}')" class="action-icon-btn bg-white">⏰</button>
                             </div>
                         </div>
                         <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
                         <div class="flex justify-between items-end mt-3">
-                            <div class="text-[10px] text-slate-400 font-bold italic">עובד: ${o.createdBy || ''}</div>
+                            <div class="text-[13px] text-slate-500 font-extrabold">נרשם ע״י: ${o.createdBy || ''}</div>
                             ${!o.completed ? 
                                 `<button onclick="customConfirm('ההזמנה נאספה?', () => toggleComplete('${id}', true))" class="btn-nasaf">נאסף ✓</button>` : 
                                 `<button onclick="customConfirm('להחזיר לטיפול?', () => toggleComplete('${id}', false))" class="text-[12px] font-bold bg-slate-400 text-white px-3 py-1 rounded">החזר</button>`
