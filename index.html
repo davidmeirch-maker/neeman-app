@@ -292,6 +292,7 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
             // הודעת ווצאפ מעודכנת לפי בקשתך
             const waMsg = `היי ${o.name}, בקשר להזמנה שלך ממאפה נאמן:`;
             const waUrl = `https://wa.me/972${o.phone.replace(/^0/,'')}?text=${encodeURIComponent(waMsg)}`;
+            const randomRotate = (Math.random() * 2 - 1).toFixed(1); // יוצר זווית בין -1 ל-1 מעלות
 
             return `
                 <div class="order-card">
@@ -364,24 +365,31 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
 
 function showAddModal() {
     const fab = document.querySelector('.fab');
-    const modal = document.getElementById('addModal');
+    const modal = document.getElementById('modal'); // תיקנתי מ-addModal ל-modal
+    
+    document.getElementById('edit-id').value = ''; // מאפס את ה-ID כדי שתהיה הזמנה חדשה
+    document.querySelector('form').reset(); // מנקה את השדות
     
     modal.style.display = 'flex';
     
     // הבונוס: מעלים את הפלוס בצורה חלקה
-    fab.style.opacity = '0';
-    fab.style.pointerEvents = 'none'; // מונע לחיצות בטעות כשהוא שקוף
+    if(fab) {
+        fab.style.opacity = '0';
+        fab.style.pointerEvents = 'none';
+    }
 }
 
-function closeAddModal() {
+function closeModal() {
     const fab = document.querySelector('.fab');
-    const modal = document.getElementById('addModal');
+    const modal = document.getElementById('modal');
     
     modal.style.display = 'none';
     
-    // הבונוס: מחזיר את הפלוס בצורה חלקה
-    fab.style.opacity = '1';
-    fab.style.pointerEvents = 'auto';
+    // מחזיר את הפלוס בצורה חלקה
+    if(fab) {
+        fab.style.opacity = '1';
+        fab.style.pointerEvents = 'auto';
+    }
 }
     
     function editOrder(id) { 
