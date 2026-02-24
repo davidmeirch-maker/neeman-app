@@ -104,44 +104,36 @@ body {
     position: fixed; 
     bottom: 30px; 
     left: 25px; 
-    width: 65px; 
-    height: 65px; 
-    /* עיצוב של ראש נעץ עם השתקפות */
-    background: radial-gradient(circle at 20px 20px, #ff4d4d, #b30000); 
+    width: 72px; /* גודל מרשים */
+    height: 72px; 
+    /* שילוב של זהב וחום-דבש (כמו קרום של לחם) */
+    background: linear-gradient(135deg, #f59e0b, #d97706); 
     color: white; 
     border-radius: 50%; 
     display: flex; 
-    flex-direction: column;
     align-items: center; 
     justify-content: center; 
     z-index: 1000;
-    /* צל שגורם לו להיראות בולט מעל הלוח */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    border: 3px solid rgba(255,255,255,0.1);
-    transition: all 0.2s ease;
+    /* צל שנותן תחושת גובה מעל הלוח */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    border: 3px solid #fef3c7; /* מסגרת בהירה שמקפיצה את הכפתור */
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
 }
 
-/* אפקט לחיצה - כאילו הנעץ נכנס פנימה */
-.fab:active { 
-    transform: scale(0.9) translateY(4px); 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-}
-
-/* הוספת טקסט "חדש" קטן מתחת לפלוס */
-.fab::after {
-    content: "חדש";
-    font-size: 10px;
-    font-weight: 900;
-    margin-top: -4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* הגדלת הפלוס עצמו */
 .fab span {
-    font-size: 32px;
+    font-size: 48px; /* פלוס ענק */
+    font-weight: 900;
     line-height: 1;
-    margin-bottom: 2px;
+    /* הבלטה של הפלוס הלבן */
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    display: block;
+    margin-top: -4px; /* תיקון מרכוז קטן */
+}
+
+.fab:active { 
+    transform: scale(0.9) rotate(5deg); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
