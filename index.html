@@ -307,7 +307,16 @@
 
     if(currentUser) {
         database.ref('users/' + currentUser).once('value', (s) => { if(s.exists() && s.val().approved) startApp(); });
-    }
+    }function displayCurrentDate() {
+    const now = new Date();
+    const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
+    const dateStr = now.toLocaleDateString('he-IL', options).replace(/\./g, '/');
+    const element = document.getElementById('current-date-display');
+    if(element) element.innerText = dateStr;
+}
+
+// זה מפעיל את התאריך ברגע שהאפליקציה עולה
+displayCurrentDate();
 </script>
 </body>
 </html>
