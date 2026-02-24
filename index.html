@@ -16,8 +16,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
-body { 
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Varela+Round&display=swap');body { 
     font-family: 'Assistant', sans-serif; 
     /* רקע של לוח עץ כהה עם טקסטורה */
     background-color: #4a3728;
@@ -41,6 +40,10 @@ body {
     border-bottom: 3px solid #3d2b1f; 
     position: relative; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    .header-bg h1 {
+    font-size: 36px !important;
+    font-weight: 900;
+}
 }
 .order-card { 
     background: white; 
@@ -79,11 +82,14 @@ body {
     border: 1px solid #fde68a; 
     border-radius: 4px; 
     padding: 10px 15px;
-    color: #1e293b; 
-    font-weight: 600; 
     line-height: 1.5em; 
     margin: 8px 0; 
-    font-size: 16px;
+    
+    /* הגדרות הפונט והצבע החדשות */
+    font-family: 'Varela Round', sans-serif; 
+    font-size: 19px;
+    color: #2c3e50;
+    font-weight: 600;}
     
     /* הגבלת גובה וחצי עמוד */
     max-height: 200px; /* גובה מקסימלי לתוכן */
