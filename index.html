@@ -115,9 +115,9 @@ body {
     margin: 8px 0; 
     font-size: 16px;
     
-    /* הגבלת גובה וחצי עמוד */
-    max-height: 200px; /* גובה מקסימלי לתוכן */
-    overflow-y: auto;  /* מאפשר גלילה פנימית אם הטקסט ארוך */
+/* ביטול הגבלת גובה - הדף ייפתח במלואו */
+    max-height: none; /* גובה מקסימלי לתוכן */
+    overflow-y: visible;  /* מאפשר גלילה פנימית אם הטקסט ארוך */
     
     /* עיצוב פס הגלילה שיהיה עדין */
     scrollbar-width: thin;
@@ -174,41 +174,54 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
             border: 2px solid #1e293b !important; font-weight: 900;
             padding: 5px 15px; border-radius: 6px; font-size: 13px;
             cursor: pointer;
-       /* עיצוב הקיפול (אקורדיון) */
+/* עיצוב הלשונית של הקיפול */
 .order-accordion summary {
     list-style: none;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
-    color: #64748b;
+    color: #8b5e3c; /* צבע חום-עץ */
     cursor: pointer;
-    padding: 6px;
-    background: #f1f5f9;
-    border-radius: 6px;
-    border: 1px dashed #cbd5e1;
-    outline: none;
-    margin-bottom: 5px;
+    padding: 8px;
+    background: #fef3c7; /* צבע נייר בהיר */
+    border-radius: 0 0 10px 10px; /* מעוגל רק למטה כמו לשונית */
+    border: 1px solid #fde68a;
+    border-top: none;
+    width: 60%; /* שלא יתפוס את כל הרוחב */
+    margin: 0 auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
-/* שינוי מראה כשהקיפול פתוח */
-.order-accordion[open] summary {
-    background: #fff1f2;
-    color: #e11d48;
-    border-style: solid;
-    margin-bottom: 10px;
-}
-
-/* אנימציה חלקה לפתיחה */
+/* ביטול הגלילה והגבלת הגובה של הפירוט */
 .order-accordion[open] .order-details-box {
-    animation: slideDown 0.3s ease-out;
+    max-height: none !important; /* פותח את כל הדף */
+    overflow: visible !important; /* מבטל גלילה פנימית */
+    animation: foldOpen 0.5s ease-out;
+    transform-origin: top;
 }
 
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
+/* אפקט פתיחה כמו קיפול נייר */
+@keyframes foldOpen {
+    from { 
+        transform: rotateX(-90deg);
+        opacity: 0;
+    }
+    to { 
+        transform: rotateX(0deg);
+        opacity: 1;
+    }
 }
 
-.order-accordion summary::-webkit-details-marker { display: none; } }
+/* שינוי הטקסט בלשונית כשהיא פתוחה */
+.order-accordion[open] summary {
+    background: #d1d5db;
+    color: #374151;
+    width: 40%;
+    font-size: 11px;
+}
+
+.order-accordion summary::-webkit-details-marker { display: none; }
     </style>
 </head>
 <body>
@@ -388,10 +401,10 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
                             </div>
                         </div>
                         <div class="card-body">
-    <details class="order-accordion">
-        <summary>לחץ לפירוט ההזמנה...</summary>
-        <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
-    </details>
+<details class="order-accordion">
+    <summary>▼ פתח הזמנה ▼</summary>
+    <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
+</details>
 </div>
                         <div class="flex justify-between items-end mt-3">
                             <div class="text-[13px] text-slate-500 font-extrabold">נרשם ע״י: ${o.createdBy || ''}</div>
