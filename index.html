@@ -407,13 +407,26 @@ function closeModal() {
         document.getElementById('in-time').value = o.deliveryTime; document.getElementById('modal').style.display = 'flex'; 
     }
 
-    function addToCalendar(id) {
-        const o = allOrders[id];
-        const start = new Date(o.deliveryDate + 'T' + o.deliveryTime);
-        const format = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
-        const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(new Date(start.getTime()+1800000))}`,`SUMMARY:הזמנה מאפה נאמן: ${o.name}`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
-        const link = document.createElement('a'); link.href = window.URL.createObjectURL(new Blob([ics], {type: 'text/calendar'})); link.download = `הזמנה.ics`; link.click();
+function addToCalendar(id) {
+    const o = allOrders[id];
+    const start = new Date(o.deliveryDate + 'T' + o.deliveryTime);
+
+    // --- החלק החדש של אנדרואיד (רק אם המכשיר הוא אנדרואיד) ---
+    if (/Android/i.test(navigator.userAgent)) {
+        const end = new Date(start.getTime() + 1800000); 
+        const f = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
+        const title = encodeURIComponent(`הזמנה מאפה נאמן: ${o.name}`);
+        const info = encodeURIComponent(`טלפון: ${o.phone}\n${o.details}`);
+        const gUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${f(start)}/${f(end)}&details=${info}`;
+        window.open(gUrl, '_blank');
+        return; // כאן הוא עוצר ולא מוריד את הקובץ
     }
+
+    // --- הקוד המקורי שלך (לא נגעתי בכלום!) ---
+    const format = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
+    const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART:${format(start)}`,`DTEND:${format(new Date(start.getTime()+1800000))}`,`SUMMARY:הזמנה מאפה נאמן: ${o.name}`,'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','END:VALARM','BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+    const link = document.createElement('a'); link.href = window.URL.createObjectURL(new Blob([ics], {type: 'text/calendar'})); link.download = `הזמנה.ics`; link.click();
+}
 
     if(currentUser) {
         database.ref('users/' + currentUser).once('value', (s) => { if(s.exists() && s.val().approved) startApp(); });
