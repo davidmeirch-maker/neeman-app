@@ -122,12 +122,27 @@ body {
     padding: 10px 15px !important;
 }
 
-/* שינוי הנעץ לסיכה קטנה ואפורה */
+/* עיצוב הזמנה שבוצעה - מראה ישן ודהוי */
+.order-completed {
+    filter: grayscale(0.4) sepia(0.2); /* גוון מעט אפרפר-עתיק */
+    opacity: 0.85; /* מעט שקוף */
+    transform: scale(0.98); /* טיפה קטן יותר */
+    box-shadow: 2px 4px 10px rgba(0,0,0,0.1) !important; /* צל חלש */
+}
+
+/* שינוי הנעץ לסיכה קטנה חלודה/אפורה */
 .order-completed::before {
-    background: #94a3b8 !important;
+    background: radial-gradient(circle at 4px 4px, #94a3b8, #475569) !important;
     width: 12px !important;
     height: 12px !important;
     top: 5px !important;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3) !important;
+}
+
+/* טקסט דהוי בתוך בוצעו */
+.order-completed h3, .order-completed a {
+    color: #64748b !important;
+    text-decoration: none !important;
 }
         .card-header { padding: 8px 25px 8px 12px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
         .card-body { padding: 12px 25px 12px 12px; }
@@ -508,40 +523,60 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
 
 function showAddModal() {
     const fab = document.querySelector('.fab');
-    const modal = document.getElementById('modal'); // תיקנתי מ-addModal ל-modal
+    const modal = document.getElementById('modal');
+    // הגדרת המשתנים שחסרו לך:
+    const header = document.querySelector('.header-bg');
+    const tab = document.getElementById('status-tab');
     
-    document.getElementById('edit-id').value = ''; // מאפס את ה-ID כדי שתהיה הזמנה חדשה
-    document.querySelector('form').reset(); // מנקה את השדות
+    document.getElementById('edit-id').value = ''; 
+    document.querySelector('form').reset(); 
     
     modal.style.display = 'flex';
     
-    // הבונוס: מעלים את הפלוס בצורה חלקה
-    if(fab) {
-        fab.style.opacity = '0';
-        fab.style.pointerEvents = 'none';
-    }
+    // הסתרה מלאה של האלמנטים
+    if(fab) fab.style.display = 'none';
+    if(header) header.style.display = 'none';
+    if(tab) tab.style.display = 'none';
 }
-
 function closeModal() {
     const fab = document.querySelector('.fab');
     const modal = document.getElementById('modal');
+    // הגדרת המשתנים כדי שנוכל להחזיר אותם
+    const header = document.querySelector('.header-bg');
+    const tab = document.getElementById('status-tab');
     
     modal.style.display = 'none';
     
-    // מחזיר את הפלוס בצורה חלקה
+    // החזרת הכל למצב גלוי
     if(fab) {
+        fab.style.display = 'flex';
         fab.style.opacity = '1';
         fab.style.pointerEvents = 'auto';
     }
+    if(header) header.style.display = 'block';
+    if(tab) tab.style.display = 'flex';
 }
     
-    function editOrder(id) { 
-        const o = allOrders[id]; document.getElementById('edit-id').value = id; 
-        document.getElementById('in-name').value = o.name; document.getElementById('in-phone').value = o.phone; 
-        document.getElementById('in-desc').value = o.details; document.getElementById('in-date').value = o.deliveryDate; 
-        document.getElementById('in-time').value = o.deliveryTime; document.getElementById('modal').style.display = 'flex'; 
-    }
+   function editOrder(id) { 
+    const o = allOrders[id]; 
+    const fab = document.querySelector('.fab');
+    const header = document.querySelector('.header-bg');
+    const tab = document.getElementById('status-tab');
 
+    document.getElementById('edit-id').value = id; 
+    document.getElementById('in-name').value = o.name; 
+    document.getElementById('in-phone').value = o.phone; 
+    document.getElementById('in-desc').value = o.details; 
+    document.getElementById('in-date').value = o.deliveryDate; 
+    document.getElementById('in-time').value = o.deliveryTime; 
+    
+    document.getElementById('modal').style.display = 'flex'; 
+
+    // הסתרה מלאה של הלוח בזמן עריכה
+    if(fab) fab.style.display = 'none';
+    if(header) header.style.display = 'none';
+    if(tab) tab.style.display = 'none';
+}
 function addToCalendar(id) {
     const o = allOrders[id];
     const start = new Date(o.deliveryDate + 'T' + o.deliveryTime);
