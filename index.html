@@ -174,7 +174,41 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
             border: 2px solid #1e293b !important; font-weight: 900;
             padding: 5px 15px; border-radius: 6px; font-size: 13px;
             cursor: pointer;
-        }
+       /* עיצוב הקיפול (אקורדיון) */
+.order-accordion summary {
+    list-style: none;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #64748b;
+    cursor: pointer;
+    padding: 6px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    border: 1px dashed #cbd5e1;
+    outline: none;
+    margin-bottom: 5px;
+}
+
+/* שינוי מראה כשהקיפול פתוח */
+.order-accordion[open] summary {
+    background: #fff1f2;
+    color: #e11d48;
+    border-style: solid;
+    margin-bottom: 10px;
+}
+
+/* אנימציה חלקה לפתיחה */
+.order-accordion[open] .order-details-box {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.order-accordion summary::-webkit-details-marker { display: none; } }
     </style>
 </head>
 <body>
@@ -353,7 +387,12 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
 </a></a>                                <button onclick="addToCalendar('${id}')" class="flex items-center justify-center w-9 h-9 text-[26px]">⏰</button>
                             </div>
                         </div>
-                        <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
+                        <div class="card-body">
+    <details class="order-accordion">
+        <summary>לחץ לפירוט ההזמנה...</summary>
+        <div class="order-details-box whitespace-pre-wrap">${o.details}</div>
+    </details>
+</div>
                         <div class="flex justify-between items-end mt-3">
                             <div class="text-[13px] text-slate-500 font-extrabold">נרשם ע״י: ${o.createdBy || ''}</div>
                             ${!o.completed ? 
