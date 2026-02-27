@@ -34,23 +34,54 @@ body {
             box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 20px;
         }
 
+/* הראש נשאר צמוד למעלה */
 .header-bg { 
-    background: rgba(255, 255, 255, 0.95); 
-    padding: calc(20px + env(safe-area-inset-top)) 20px 15px; 
+    background: rgba(255, 255, 255, 0.98); 
+    padding: calc(15px + env(safe-area-inset-top)) 20px 10px; 
     text-align: center; 
-    border-bottom: 3px solid #3d2b1f; 
-    position: relative; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-bottom: 4px solid #3d2b1f; 
+    position: fixed; /* הופך אותו לצמוד */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* דואג שיהיה מעל הכל */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
-        .header-bg h1 {
-    font-size: 48px !important; /* הכותרת תהיה ממש גדולה */
-    font-weight: 900;           /* עובי הכי חזק שיש */
-    color: #1e293b;            /* צבע כהה ובולט */
-    line-height: 1;            /* מונע מרווחים מיותרים מעל/מתחת */
-    margin: 15px 0 5px 0;      /* יוצר רווח נכון בין הלוגו למטה */
-    display: block;            /* מבטיח שהיא תופסת שורה משלה */
+
+.header-bg h1 {
+    font-size: 38px !important; /* קצת קטן יותר כדי שלא יתפוס חצי מסך */
+    font-weight: 900;
+    color: #1e293b;
+    margin: 5px 0;
 }
-.order-card { 
+
+/* הלשונית המעוצבת שתלויה מתחת לראש */
+.view-status-tab {
+    position: fixed;
+    top: calc(115px + env(safe-area-inset-top)); /* מתחת ל-header */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3d2b1f; /* צבע עץ כהה */
+    color: #fef3c7; /* צבע נייר */
+    padding: 4px 20px;
+    border-radius: 0 0 15px 15px;
+    font-size: 14px;
+    font-weight: 800;
+    z-index: 999;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid #fef3c7;
+    border-top: none;
+}
+
+/* הוספת רווח לרשימת ההזמנות כדי שלא יתחילו מתחת לראש */
+#orders-list {
+    padding-top: 170px; /* רווח גובה הראש + הלשונית */
+    padding-bottom: 100px;
+}
+        .order-card { 
     background: white; 
     border-radius: 2px; 
     margin: 30px 16px; /* הגדלתי מרווח שיהיה מקום לנעץ */
@@ -250,22 +281,22 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
 
 <div id="main-app" class="hidden">
     <div class="header-bg">
-        <button onclick="toggleView()" id="view-btn" class="absolute top-4 right-4 text-[11px] font-bold text-slate-500 border px-2 py-1 rounded bg-slate-50 flex items-center gap-1">
-           <img src="https://cdn-icons-png.flaticon.com/128/588/588395.png" width="12">
-            <span>בוצעו</span>
-        </button>
-        <button onclick="logout()" class="absolute top-4 left-4 text-[10px] font-bold text-slate-400 border px-2 py-1 rounded">החלף</button>
-        <h1 class="text-2xl font-black text-slate-800 mt-4">לוח הזמנות</h1>
+        <button onclick="logout()" class="absolute top-4 left-4 text-[10px] font-bold text-slate-400 border px-2 py-1 rounded">החלף עובד</button>
+        
+        <h1>לוח הזמנות</h1>
         <div class="text-sm font-bold text-slate-500">
-    מאפה נאמן | <span class="text-blue-600">מגדל העמק</span>
-</div>
-<div id="current-date-display" class="text-[12px] font-extrabold text-slate-400 mt-1"></div>
+            מאפה נאמן | <span class="text-blue-600">מגדל העמק</span>
+        </div>
+        <div id="current-date-display" class="text-[12px] font-extrabold text-slate-400"></div>
+    </div>
+
+    <div id="status-tab" onclick="toggleView()" class="view-status-tab cursor-pointer active:scale-95 transition-transform">
+        <span id="status-text">הזמנות פעילות</span>
+        <span id="status-dot" class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
     </div>
 
     <div id="orders-list" class="pb-32"></div>
-   <button class="fab" onclick="showAddModal()">
-    <span>+</span>
-</button>
+    <button class="fab" onclick="showAddModal()"><span>+</span></button>
 </div>
 
 <div id="confirm-modal" class="modal-overlay" style="z-index: 999;">
