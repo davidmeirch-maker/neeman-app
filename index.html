@@ -58,17 +58,16 @@ body {
 /* הלשונית המעוצבת שתלויה מתחת לראש */
 .view-status-tab {
     position: fixed;
-    top: calc(115px + env(safe-area-inset-top)); /* מתחת ל-header */
-    left: 50%;
-    transform: translateX(-50%);
-    background: #3d2b1f; /* צבע עץ כהה */
-    color: #fef3c7; /* צבע נייר */
-    padding: 4px 20px;
-    border-radius: 0 0 15px 15px;
+    top: 135px;         /* מוודא שהיא בולטת מתחת למלבן */
+    right: 20px;        /* מצמיד לימין */
+    background: #3d2b1f; 
+    color: #fef3c7; 
+    padding: 6px 15px;
+    border-radius: 0 0 12px 12px;
     font-size: 14px;
-    font-weight: 800;
-    z-index: 999;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    font-weight: 900;
+    z-index: 1001;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -472,8 +471,25 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
     function togglePay(id) { dbOrders.child(id).update({ paid: !allOrders[id].paid }); }
     function toggleComplete(id, status) { dbOrders.child(id).update({ completed: status }); }
     function deleteOrder(id) { dbOrders.child(id).remove(); }
-    function toggleView() { showCompleted = !showCompleted; document.getElementById('view-btn').querySelector('span').innerText = showCompleted ? "פעילות" : "בוצעו"; render(); }
+    
+    function toggleView() {
+        showCompleted = !showCompleted;
+        const statusText = document.getElementById('status-text');
+        const statusDot = document.getElementById('status-dot');
 
+    if (statusText && statusDot) {
+        if (showCompleted) {
+            statusText.innerText = "בוצעו";
+            statusDot.style.backgroundColor = "#94a3b8"; // אפור
+            statusDot.classList.remove('animate-ping');
+        } else {
+            statusText.innerText = "פעילות";
+            statusDot.style.backgroundColor = "#22c55e"; // ירוק
+            statusDot.classList.add('animate-ping');
+        }
+    }
+    render();
+}
     function saveOrder() {
         const id = document.getElementById('edit-id').value;
         const data = {
