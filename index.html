@@ -506,20 +506,45 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
     render();
 }
     function saveOrder() {
-        const id = document.getElementById('edit-id').value;
-        const data = {
-            name: document.getElementById('in-name').value,
-            phone: document.getElementById('in-phone').value,
-            details: document.getElementById('in-desc').value,
-            deliveryDate: document.getElementById('in-date').value,
-            deliveryTime: document.getElementById('in-time').value,
-            paid: id ? (allOrders[id].paid || false) : false,
-            completed: id ? (allOrders[id].completed || false) : false,
-            createdBy: id ? allOrders[id].createdBy : currentUser 
-        };
-        id ? dbOrders.child(id).update(data) : dbOrders.push(data);
-        closeModal();
+    const id = document.getElementById('edit-id').value;
+    const data = {
+        name: document.getElementById('in-name').value,
+        phone: document.getElementById('in-phone').value,
+        details: document.getElementById('in-desc').value,
+        deliveryDate: document.getElementById('in-date').value,
+        deliveryTime: document.getElementById('in-time').value,
+        // שומר על מצב תשלום וביצוע אם זו עריכה
+        paid: id ? (allOrders[id].paid || false) : false,
+        completed: id ? (allOrders[id].completed || false) : false,
+        createdBy: id ? allOrders[id].createdBy : currentUser 
+    };
+
+    if (id) {
+        // עדכון הזמנה קיימת
+        dbOrders.child(id).update(data);
+    } else {
+        // הוספת הזמנה חדשה
+        dbOrders.push(data);
+        
+        // יצירת הודעה מעוצבת לווטסאפ
+        const message = encodeURIComponent(
+            `🍞 *הזמנה חדשה - מאפה נאמן* 🍞\n` +
+            `--------------------------\n` +
+            `👤 *לקוח:* ${data.name}\n` +
+            `📞 *טלפון:* ${data.phone}\n` +
+            `📅 *תאריך:* ${data.deliveryDate}\n` +
+            `⏰ *שעה:* ${data.deliveryTime}\n` +
+            `📝 *פירוט:* ${data.details}\n` +
+            `--------------------------\n` +
+            `✍️ *נרשם ע"י:* ${currentUser}`
+        );
+        
+        // פתיחת ווטסאפ לשיתוף ההודעה
+        window.open(`https://wa.me/?text=${message}`, '_blank');
     }
+    
+    closeModal();
+}
 
 function showAddModal() {
     const fab = document.querySelector('.fab');
