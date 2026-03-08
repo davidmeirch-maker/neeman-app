@@ -526,6 +526,9 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
         // הוספת הזמנה חדשה
         dbOrders.push(data);
         
+const dateObj = new Date(data.deliveryDate);
+const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+const dayName = days[dateObj.getDay()];       
 // הפיכת התאריך לפורמט ישראלי (DD/MM/YYYY) כדי שלא יתהפך לאף אחד
 const formattedDate = data.deliveryDate.split('-').reverse().join('/');
 
@@ -535,7 +538,7 @@ const message = encodeURIComponent(
     `--------------------------\n` +
     `👤 *לקוח:* ${data.name}\n` +
     `📞 *טלפון:* ${data.phone}\n` +
-    `📅 *מועד:* יום ${data.day} | ${formattedDate}\n` + // משתמש ב-data.day הקיים
+    `📅 *מועד:* יום ${dayName} | ${formattedDate}\n` +
     `⏰ *שעה:* ${data.deliveryTime}\n` +
     `📝 *פירוט:* ${data.details}\n` +
     `--------------------------\n` +
