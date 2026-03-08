@@ -287,7 +287,7 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
     <h1 class="text-3xl font-black text-slate-800">מערכת ניהול הזמנות</h1>
     <p class="text-slate-500 font-bold mb-8">מאפה נאמן | מגדל העמק</p>
     <div class="w-full max-w-xs">
-        <input type="text" id="user-name-input" placeholder="שם העובד" class="text-center w-full mb-4 border-2 p-4 rounded-xl text-lg outline-none">
+        <input type="text" id="user-name-input" placeholder="שם משתמש/ת" class="text-center w-full mb-4 border-2 p-4 rounded-xl text-lg outline-none">
         <button onclick="handleLogin()" class="w-full p-4 bg-blue-600 text-white rounded-xl font-black text-xl">כניסה</button>
         <p id="auth-msg" class="mt-4 text-red-500 font-bold hidden text-sm"></p>
     </div>
@@ -295,7 +295,7 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
 
 <div id="main-app" class="hidden">
     <div class="header-bg">
-        <button onclick="logout()" class="absolute top-4 left-4 text-[10px] font-bold text-slate-400 border px-2 py-1 rounded">החלף עובד</button>
+        <button onclick="logout()" class="absolute top-4 left-4 text-[10px] font-bold text-slate-400 border px-2 py-1 rounded">החלף משתמש/ת</button>
         
         <h1>לוח הזמנות</h1>
         <div class="text-sm font-bold text-slate-500">
@@ -423,8 +423,9 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
             const payText = o.paid ? 'שולם ✓' : 'לא שולם';
             
             // הודעת ווצאפ מעודכנת לפי בקשתך
+            const cleanPhone = data.phone.replace(/\D/g, '');
             const waMsg = `היי ${o.name}, בקשר להזמנה שלך ממאפה נאמן:`;
-            const waUrl = `https://wa.me/972${o.phone.replace(/^0/,'')}?text=${encodeURIComponent(waMsg)}`;
+            const waUrl = `https://wa.me/972${cleanPhone.replace(/^0/,'')}?text=${encodeURIComponent(waMsg)}`;
             const randomRotate = (Math.random() * 2 - 1).toFixed(1); // יוצר זווית בין -1 ל-1 מעלות
 
 // מוסיף את השורה הזו כדי לבדוק אם ההזמנה בוצעה
