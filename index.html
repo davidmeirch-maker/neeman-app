@@ -422,8 +422,8 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
             const payClass = o.paid ? 'pay-success' : 'pay-pending';
             const payText = o.paid ? 'שולם ✓' : 'לא שולם';
             
-            // הודעת ווצאפ מעודכנת לפי בקשתך
-            const cleanPhone = data.phone.replace(/\D/g, '');
+        // תיקון: שימוש ב-o.phone במקום data.phone וניקוי המקפים
+            const cleanPhone = o.phone.replace(/\D/g, ''); 
             const waMsg = `היי ${o.name}, בקשר להזמנה שלך ממאפה נאמן:`;
             const waUrl = `https://wa.me/972${cleanPhone.replace(/^0/,'')}?text=${encodeURIComponent(waMsg)}`;
             const randomRotate = (Math.random() * 2 - 1).toFixed(1); // יוצר זווית בין -1 ל-1 מעלות
