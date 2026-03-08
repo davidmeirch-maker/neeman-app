@@ -526,18 +526,21 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
         // הוספת הזמנה חדשה
         dbOrders.push(data);
         
-        // יצירת הודעה מעוצבת לווטסאפ
-        const message = encodeURIComponent(
-            `🍞 *הזמנה חדשה - מאפה נאמן* 🍞\n` +
-            `--------------------------\n` +
-            `👤 *לקוח:* ${data.name}\n` +
-            `📞 *טלפון:* ${data.phone}\n` +
-            `📅 *תאריך:* ${data.deliveryDate}\n` +
-            `⏰ *שעה:* ${data.deliveryTime}\n` +
-            `📝 *פירוט:* ${data.details}\n` +
-            `--------------------------\n` +
-            `✍️ *נרשם ע"י:* ${currentUser}`
-        );
+// הפיכת התאריך לפורמט ישראלי (DD/MM/YYYY) כדי שלא יתהפך לאף אחד
+const formattedDate = data.deliveryDate.split('-').reverse().join('/');
+
+// יצירת ההודעה תוך שימוש בערך היום שכבר קיים אצלך בסקריפט
+const message = encodeURIComponent(
+    `🍞 *הזמנה חדשה - מאפה נאמן* 🍞\n` +
+    `--------------------------\n` +
+    `👤 *לקוח:* ${data.name}\n` +
+    `📞 *טלפון:* ${data.phone}\n` +
+    `📅 *מועד:* יום ${data.day} | ${formattedDate}\n` + // משתמש ב-data.day הקיים
+    `⏰ *שעה:* ${data.deliveryTime}\n` +
+    `📝 *פירוט:* ${data.details}\n` +
+    `--------------------------\n` +
+    `✍️ *נרשם ע"י:* ${currentUser}`
+);
         
         // פתיחת ווטסאפ לשיתוף ההודעה
         window.open(`https://wa.me/?text=${message}`, '_blank');
