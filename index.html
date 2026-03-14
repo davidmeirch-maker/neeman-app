@@ -411,7 +411,7 @@ transition: opacity 0.3s ease, transform 0.2s ease;    cursor: pointer;
         const list = document.getElementById('orders-list');
         const filteredIds = Object.keys(allOrders)
             .filter(id => showCompleted ? allOrders[id].completed : !allOrders[id].completed)
-            .sort((a,b) => (allOrders[a].deliveryDate+allOrders[a].deliveryTime).localeCompare(allOrders[b].deliveryDate+allOrders[b].deliveryTime));
+            .sort((b,a) => (allOrders[a].deliveryDate+allOrders[a].deliveryTime).localeCompare(allOrders[b].deliveryDate+allOrders[b].deliveryTime));
 
         if (filteredIds.length === 0) { list.innerHTML = '<p class="text-center mt-10 font-bold text-slate-400">אין הזמנות כרגע...</p>'; return; }
 
